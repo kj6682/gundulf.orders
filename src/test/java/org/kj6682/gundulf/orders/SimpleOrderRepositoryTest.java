@@ -68,4 +68,48 @@ public class SimpleOrderRepositoryTest {
         System.out.println("------------------------------");
         found.forEach(System.out::println);
     }
+
+    @Test
+    public void whenSaveAnExistingObject_thenUpdate() {
+        // given
+        SimpleOrder simple = new SimpleOrder("Paris",
+                "Dummy",
+                "very delicious cake",
+                (short)1,
+                (short)10,
+                LocalDate.of(2017,12,3),
+                LocalDate.of(2017,12,4) );
+        entityManager.persist(simple);
+        entityManager.flush();
+
+
+        List<SimpleOrder> found = simpleOrderRepository.findByProducerOrderByDeadline("Dummy");
+
+        assertThat(!found.isEmpty());
+        assertThat(found.size() == 1);
+        assertThat(found.get(0).getQuantity() == 1);
+        assertThat(found.get(0).getProduct().equals("very delicious cake"));
+
+        //when
+        SimpleOrder other = new SimpleOrder("Paris",
+                "Dummy",
+                "very delicious cake indeed",
+                (short)1500,
+                (short)10,
+                LocalDate.of(2017,12,3),
+                LocalDate.of(2017,12,4) );
+        other.setId(found.get(0).getId());
+
+        simpleOrderRepository.save(other);
+
+        found = simpleOrderRepository.findByProducerOrderByDeadline("Dummy");
+
+        // then
+        assertThat(!found.isEmpty());
+        assertThat(found.size() == 1);
+        assertThat(found.get(0).getQuantity() == 1500);
+        assertThat(found.get(0).getProduct().equals("very delicious cake indeed"));
+
+
+    }
 }

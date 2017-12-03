@@ -50,4 +50,20 @@ class Controller {
 
     }
 
+    @PostMapping(value = "/products/to/{producer}")
+    ResponseEntity<?> create(@PathVariable String producer,
+                             @RequestBody SimpleOrder order) {
+        Assert.notNull(order, "Order can not be empty");
+        //TODO check the producer
+        SimpleOrder result = repository.save(order);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping(value = "/products/from/{shop}/{id}")
+    void delete(@PathVariable String shop,
+                @PathVariable(required = true) Long id) {
+        //TODO check the producer
+        repository.delete(id);
+    }
+
 }
