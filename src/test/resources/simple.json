@@ -1,0 +1,11 @@
+{
+  "created" : "2017-12-03",
+  "deadline": "2017-12-04",
+  "executed": 0,
+  "pieces": 1,
+  "producer": "Four",
+  "product": "Baba",
+  "quantity": 10,
+  "shop": "Paris",
+  "status": "NEW"
+}
