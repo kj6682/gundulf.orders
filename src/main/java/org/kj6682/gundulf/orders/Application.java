@@ -23,18 +23,18 @@ public class Application {
 
 	@Profile({"ddl-create", "h2"})
 	@Bean
-	CommandLineRunner initItems(SimpleOrderRepository simpleOrderRepository) throws IOException {
-		org.springframework.core.io.Resource resource = new ClassPathResource("simpleorders.json");
+	CommandLineRunner initItems(OrderLineRepository orderLineRepository) throws IOException {
+		org.springframework.core.io.Resource resource = new ClassPathResource("orderlines.json");
 		BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()));
 		final String jsonArray = reader.lines().collect(Collectors.joining());
 		ObjectMapper mapper = new ObjectMapper();
 
-		SimpleOrder[] asArray = mapper.readValue(jsonArray, SimpleOrder[].class);
+		OrderLine[] asArray = mapper.readValue(jsonArray, OrderLine[].class);
 
 		return (evt) -> {
 			Arrays.asList(asArray).forEach(
 					order -> {
-						simpleOrderRepository.save(order);
+						orderLineRepository.save(order);
 						System.out.println(order);
 					}
 			);

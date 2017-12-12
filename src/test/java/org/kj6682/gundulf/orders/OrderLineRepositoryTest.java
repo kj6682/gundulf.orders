@@ -7,39 +7,39 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
 @ActiveProfiles( profiles={"h2"})
-public class SimpleOrderRepositoryTest {
+public class OrderLineRepositoryTest {
 
     @Autowired
     private TestEntityManager entityManager;
 
     @Autowired
-    private SimpleOrderRepository simpleOrderRepository;
+    private OrderLineRepository orderLineRepository;
 
     // write test cases here
     @Test
     public void whenFindByProducerOrderByDeadline_thenReturnListOfOrders() {
         // given
-        SimpleOrder simple = new SimpleOrder("Paris",
+        OrderLine simple = new OrderLine("Paris",
                 "Four",
                 "very delicious cookie",
-                (short)1,
-                (short)10,
+                10,
                 LocalDate.of(2017,12,3),
                 LocalDate.of(2017,12,4) );
         entityManager.persist(simple);
         entityManager.flush();
 
         // when
-        List<SimpleOrder> found = simpleOrderRepository.findByProducerOrderByDeadline("Four");
+        List<OrderLine> found = orderLineRepository.findByProducerOrderByDeadline("Four");
 
         // then
         assertThat(!found.isEmpty());
@@ -50,18 +50,17 @@ public class SimpleOrderRepositoryTest {
     @Test
     public void whenFindByShopOrderByCreated_thenReturnListOfOrders() {
         // given
-        SimpleOrder simple = new SimpleOrder("Paris",
+        OrderLine simple = new OrderLine("Paris",
                 "Entremets",
                 "very delicious cake",
-                (short)1,
-                (short)10,
+                10,
                 LocalDate.of(2017,12,3),
                 LocalDate.of(2017,12,4) );
         entityManager.persist(simple);
         entityManager.flush();
 
         // when
-        List<SimpleOrder> found = simpleOrderRepository.findByShopOrderByCreated("Paris");
+        List<OrderLine> found = orderLineRepository.findByShopOrderByCreated("Paris");
 
         // then
         assertThat(!found.isEmpty());
@@ -72,18 +71,17 @@ public class SimpleOrderRepositoryTest {
     @Test
     public void whenSaveAnExistingObject_thenUpdate() {
         // given
-        SimpleOrder simple = new SimpleOrder("Paris",
+        OrderLine simple = new OrderLine("Paris",
                 "Dummy",
                 "very delicious cake",
-                (short)1,
-                (short)10,
+                10,
                 LocalDate.of(2017,12,3),
                 LocalDate.of(2017,12,4) );
         entityManager.persist(simple);
         entityManager.flush();
 
 
-        List<SimpleOrder> found = simpleOrderRepository.findByProducerOrderByDeadline("Dummy");
+        List<OrderLine> found = orderLineRepository.findByProducerOrderByDeadline("Dummy");
 
         assertThat(!found.isEmpty());
         assertThat(found.size() == 1);
@@ -91,18 +89,17 @@ public class SimpleOrderRepositoryTest {
         assertThat(found.get(0).getProduct().equals("very delicious cake"));
 
         //when
-        SimpleOrder other = new SimpleOrder("Paris",
+        OrderLine other = new OrderLine("Paris",
                 "Dummy",
                 "very delicious cake indeed",
-                (short)1500,
-                (short)10,
+                1500,
                 LocalDate.of(2017,12,3),
                 LocalDate.of(2017,12,4) );
         other.setId(found.get(0).getId());
 
-        simpleOrderRepository.save(other);
+        orderLineRepository.save(other);
 
-        found = simpleOrderRepository.findByProducerOrderByDeadline("Dummy");
+        found = orderLineRepository.findByProducerOrderByDeadline("Dummy");
 
         // then
         assertThat(!found.isEmpty());

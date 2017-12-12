@@ -14,7 +14,7 @@ import java.time.LocalDate;
 
 @Data
 @Entity
-public class SimpleOrder {
+public class OrderLine {
 
 
     @Id
@@ -24,9 +24,9 @@ public class SimpleOrder {
     private String shop;
     private String producer;
     private String product;
-    private short pieces;
-    private short quantity;
-    private short executed;
+    private Integer quantity;
+    private Integer executed;
+    private String status;
 
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonDeserialize(using = LocalDateDeserializer.class)
@@ -36,16 +36,14 @@ public class SimpleOrder {
     @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate deadline;
 
-    private String status;
 
-    protected SimpleOrder() {
+    protected OrderLine() {
     }
 
-    public SimpleOrder(String shop, String producer, String product, short pieces, short quantity, LocalDate created, LocalDate deadline) {
+    public OrderLine(String shop, String producer, String product, Integer quantity, LocalDate created, LocalDate deadline) {
         this.shop = shop;
         this.producer = producer;
         this.product = product;
-        this.pieces = pieces;
         this.quantity = quantity;
         this.created = created;
         this.deadline = deadline;

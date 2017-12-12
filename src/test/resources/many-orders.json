@@ -3,9 +3,8 @@
     "created" : "2017-12-03",
     "deadline": "2017-12-04",
     "executed": 0,
-    "pieces": 1,
     "producer": "Four",
-    "product": "Baba",
+    "product": "Baba-1",
     "quantity": 10,
     "shop": "Paris",
     "status": "NEW"
@@ -14,9 +13,8 @@
     "created" : "2017-12-03",
     "deadline": "2017-12-04",
     "executed": 0,
-    "pieces": 4,
     "producer": "Four",
-    "product": "Baba",
+    "product": "Baba-2",
     "quantity": 10,
     "shop": "Nantes",
     "status": "NEW"
@@ -25,22 +23,30 @@
     "created" : "2017-12-03",
     "deadline": "2017-12-04",
     "executed": 0,
-    "pieces": 1,
-    "producer": "Entremets",
-    "product": "Tiramisu",
-    "quantity": 40,
-    "shop": "Paris",
+    "producer": "Four",
+    "product": "Baba-2",
+    "quantity": 10,
+    "shop": "Luxembourg",
     "status": "NEW"
   },
   {
     "created" : "2017-12-03",
-    "deadline": "2017-12-04",
+    "deadline": "2017-12-08",
     "executed": 0,
-    "pieces": 8,
-    "producer": "Entremets",
-    "product": "Tiramisu",
-    "quantity": 2,
-    "shop": "Nantes",
+    "producer": "Four",
+    "product": "Baba-2",
+    "quantity": 10,
+    "shop": "Luxembourg",
+    "status": "NEW"
+  },
+  {
+    "created" : "2017-12-03",
+    "deadline": "2017-12-08",
+    "executed": 0,
+    "producer": "Four",
+    "product": "Baba-2",
+    "quantity": 15,
+    "shop": "Paris",
     "status": "NEW"
   }
 ]

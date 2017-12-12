@@ -24,28 +24,27 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @RunWith(SpringRunner.class)
 @JsonTest
-public class SimpleJsonTest {
+public class OrderLineJsonTest {
 
     @Autowired
-    private JacksonTester<SimpleOrder> json;
+    private JacksonTester<OrderLine> json;
 
     @MockBean
-    private SimpleOrderRepository repository;
+    private OrderLineRepository repository;
 
-    SimpleOrder simpleOrder;
+    OrderLine simpleOrder;
 
     File jsonFile;
 
     @Before
     public void setup() throws Exception{
-        simpleOrder = new SimpleOrder("Paris",
+        simpleOrder = new OrderLine("Paris",
                                       "Four",
-                                      "Baba",
-                                      (short)1,
-                                      (short)10,
+                                      "Baba-1",
+                                      10,
                                       LocalDate.of(2017,12,3),
                                       LocalDate.of(2017,12,4) );
-        jsonFile = ResourceUtils.getFile("classpath:simple.json");
+        jsonFile = ResourceUtils.getFile("classpath:one-order.json");
 
     }
     @Test
@@ -57,7 +56,7 @@ public class SimpleJsonTest {
     public void deserialise() throws Exception {
 
         String jsonObject = new String(Files.readAllBytes(jsonFile.toPath()));
-        SimpleOrder newCake = this.json.parse(jsonObject).getObject();
+        OrderLine newCake = this.json.parse(jsonObject).getObject();
         assertThat(newCake.equals(simpleOrder));
 
     }
