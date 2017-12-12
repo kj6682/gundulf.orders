@@ -13,7 +13,10 @@ import org.springframework.util.ResourceUtils;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -27,13 +30,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 @org.springframework.boot.test.autoconfigure.json.JsonTest
 public class ProductLinesJsonTest {
 
-    File jsonOne;
-    File jsonMany;
+    File jsonOneProduct;
+    File jsonManyProducts;
+    File jsonManyOrders;
 
     @Before
     public void setup() throws Exception{
-        jsonOne = ResourceUtils.getFile("classpath:one-product.json");
-        jsonMany = ResourceUtils.getFile("classpath:many-products.json");
+        jsonOneProduct = ResourceUtils.getFile("classpath:one-product.json");
+        jsonManyProducts = ResourceUtils.getFile("classpath:many-products.json");
+        jsonManyOrders = ResourceUtils.getFile("classpath:many-orders.json");
+
     }
     @Test
     public void serialise() throws Exception{
@@ -57,7 +63,7 @@ public class ProductLinesJsonTest {
         module.addDeserializer(OrderLine.class, new Controller.ProductDeserializer());
         objectMapper.registerModule(module);
 
-        String jsonProductArray = new String(Files.readAllBytes(jsonOne.toPath()));
+        String jsonProductArray = new String(Files.readAllBytes(jsonOneProduct.toPath()));
 
         OrderLine one = objectMapper.readValue(jsonProductArray, OrderLine.class);
         assertThat(one.equals("OrderLine{id=46, product='millefoglie', pieces=1, producer='Four'}"));
@@ -71,11 +77,45 @@ public class ProductLinesJsonTest {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-        String jsonProductArray = new String(Files.readAllBytes(jsonMany.toPath()));
+        String jsonProductArray = new String(Files.readAllBytes(jsonManyProducts.toPath()));
         System.out.println(jsonProductArray);
 
 
         List<OrderLine> listProds = objectMapper.readValue(jsonProductArray, new TypeReference<List<OrderLine>>(){});
         listProds.stream().forEach(System.out::println);
+    }
+
+    @Test
+    public void map() throws Exception{
+
+        String jsonProductArray = new String(Files.readAllBytes(jsonOneProduct.toPath()));
+        TypeReference<HashMap<String, String>> typeRef
+                = new TypeReference<HashMap<String, String>>() {};
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        Map<String, String> map = objectMapper.readValue(jsonProductArray, typeRef);
+        System.out.println(map);
+        System.out.println(map.get("name"));
+
+    }
+
+    @Test
+    public void list2map() throws Exception{
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        String jsonOrdersArray = new String(Files.readAllBytes(jsonManyOrders.toPath()));
+
+
+        List<OrderLine> listProds = objectMapper.readValue(jsonOrdersArray, new TypeReference<List<OrderLine>>(){});
+
+
+        Map<String, OrderLine> result1 = listProds.stream().collect(
+                Collectors.toMap(OrderLine::getProduct, o -> o));
+
+        System.out.println(result1);
+
     }
 }
