@@ -19,7 +19,11 @@ import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -45,7 +49,7 @@ class Controller {
      * I want to list all my order lines
      * so that I can facilitate dispatching the products
      */
-    @GetMapping("/orders/to/{producer}")
+    @GetMapping("/orders/producer/{producer}")
     List<OrderLine> producerOrders(@PathVariable String producer) {
 
         return repository.findByProducerOrderByDeadline(producer).stream()
@@ -61,7 +65,7 @@ class Controller {
      * so that I can facilitate my daily work
      * and possibly anticipate the future productions
      */
-    @GetMapping("/orders/to/{producer}/group_by_product")
+    @GetMapping("/orders/producer/{producer}/group_by_product")
     List<OrderLine> producerTodos(@PathVariable String producer) {
 
         return repository.findByProducerOrderByDeadline(producer).stream()
@@ -77,7 +81,7 @@ class Controller {
      * so that I can track what I asked
      * and possibly validate returns
      */
-    @GetMapping("/orders/from/{shop}")
+    @GetMapping("/orders/shop/{shop}")
     List<OrderLine> shopOrders(@PathVariable String shop) {
 
         return repository.findByShopOrderByCreated(shop).stream()
@@ -93,23 +97,31 @@ class Controller {
      * so I can place an order on it
      * and possibly modify it
      */
-    @GetMapping("/orders/from/{shop}/to/{producer}")
+    @GetMapping("/orders/shop/{shop}/products/{producer}")
     List<OrderLine> shopCatalogAndCaddy(@PathVariable String shop,
                                         @PathVariable String producer) {
 
 
-        List<OrderLine> shopOrders = repository.findByProducerOrderByDeadline(producer).stream()
-                .collect(Collectors.toList());
+        Map<String, OrderLine> result;
 
         try {
 
-            shopOrders.addAll(getProductLines(producer));
+            result = getProductLines(shop, producer);
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            result = new HashMap<String, OrderLine>();
         }
 
-        return shopOrders;
+       Map<String, OrderLine> shopOrders = repository.findByProducerOrderByDeadline(producer).stream()
+                .filter(order -> order.getShop().equals(shop)) //&& order.getDeadline().equals(deadline)
+                .collect(Collectors
+                        .toMap(OrderLine::getProduct, o -> o)); // there should be no duplicates in the original query
+
+        result.putAll(shopOrders);
+
+        return result.values().stream()
+                .collect(Collectors.toList());
     }
 
     /**
@@ -119,23 +131,31 @@ class Controller {
      * @return the list of order lines created with the product list
      * @throws IOException
      */
-    private List<OrderLine> getProductLines(@PathVariable String producer) throws IOException {
+    private Map<String, OrderLine> getProductLines(String shop, String producer) throws IOException {
 
         SimpleModule module = new SimpleModule(ProductDeserializer.class.getName(), new Version(1, 0, 0, null, null, null));
-        module.addDeserializer(OrderLine.class, new ProductDeserializer());
+        Controller.ProductDeserializer productDeserializer = new Controller.ProductDeserializer();
+        productDeserializer.setShop(shop);
+        module.addDeserializer(OrderLine.class, productDeserializer);
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         objectMapper.registerModule(module);
 
         String jsonProds = apiBouncer.get(products + "/" + producer).getBody();
-        return objectMapper.readValue(jsonProds, new TypeReference<List<OrderLine>>() {
-        });
+
+        List<OrderLine> productLines = objectMapper.readValue(jsonProds, new TypeReference<List<OrderLine>>() {});
+
+        Map<String, OrderLine> result = productLines.stream()
+                .collect(Collectors
+                        .toMap(OrderLine::getProduct, o -> o));
+        return result;
     }
 
 
-    @PostMapping(value = "/orders/to/{producer}")
-    ResponseEntity<?> create(@PathVariable String producer,
+    @PostMapping(value = "/orders/shop/{shop}/to/{producer}")
+    ResponseEntity<?> create(@PathVariable String shop,
+                             @PathVariable String producer,
                              @RequestBody OrderLine order) {
         Assert.notNull(order, "Order can not be empty");
         //TODO check the producer
@@ -143,7 +163,7 @@ class Controller {
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
-    @DeleteMapping(value = "/orders/from/{shop}/{id}")
+    @DeleteMapping(value = "/orders/shop/{shop}/{id}")
     void delete(@PathVariable String shop,
                 @PathVariable(required = true) Long id) {
         //TODO check the shop
@@ -152,12 +172,18 @@ class Controller {
 
     static class ProductDeserializer extends StdDeserializer<OrderLine> {
 
+        String shop;
+
         public ProductDeserializer() {
             this(null);
         }
 
         public ProductDeserializer(Class<?> vc) {
             super(vc);
+        }
+
+        void setShop(String shop) {
+            this.shop = shop;
         }
 
         @Override
@@ -181,6 +207,11 @@ class Controller {
             JsonNode jProducer = node.get("producer");
             String producer = jProducer.asText();
             order.setProducer(producer);
+
+            order.setShop(shop);
+            order.setQuantity(0);
+            order.setStatus("NEW");
+            order.setCreated(LocalDate.now());
 
             return order;
         }

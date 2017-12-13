@@ -13,6 +13,9 @@ import org.springframework.util.ResourceUtils;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,9 +25,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Created by luigi on 12/07/2017.
- *
+ * <p>
  * TDD - use this test to define the ORDER model
- *
  */
 @RunWith(SpringRunner.class)
 @org.springframework.boot.test.autoconfigure.json.JsonTest
@@ -32,21 +34,27 @@ public class ProductLinesJsonTest {
 
     File jsonOneProduct;
     File jsonManyProducts;
+    File jsonOneOrder;
     File jsonManyOrders;
+    ObjectMapper objectMapper;
 
     @Before
-    public void setup() throws Exception{
+    public void setup() throws Exception {
         jsonOneProduct = ResourceUtils.getFile("classpath:one-product.json");
         jsonManyProducts = ResourceUtils.getFile("classpath:many-products.json");
+        jsonOneOrder = ResourceUtils.getFile("classpath:one-order.json");
         jsonManyOrders = ResourceUtils.getFile("classpath:many-orders.json");
 
+        objectMapper = getObjectMapper();
+
     }
+
     @Test
-    public void serialise() throws Exception{
+    public void serialise() throws Exception {
 
         ObjectMapper objectMapper = new ObjectMapper();
-        OrderLine order =  new OrderLine();
-        order.setId((long)0);
+        OrderLine order = new OrderLine();
+        order.setId((long) 0);
         order.setProduct("millefoglie");
         order.setProducer("alibaba");
         objectMapper.writeValue(new File("target/two.json"), order);
@@ -56,66 +64,108 @@ public class ProductLinesJsonTest {
     @Test
     public void deserialiseOne() throws Exception {
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
         SimpleModule module = new SimpleModule(Controller.ProductDeserializer.class.getName(), new Version(1, 0, 0, null, null, null));
         module.addDeserializer(OrderLine.class, new Controller.ProductDeserializer());
+
         objectMapper.registerModule(module);
 
         String jsonProductArray = new String(Files.readAllBytes(jsonOneProduct.toPath()));
 
         OrderLine one = objectMapper.readValue(jsonProductArray, OrderLine.class);
-        assertThat(one.equals("OrderLine{id=46, product='millefoglie', pieces=1, producer='Four'}"));
+        assertThat(one.getId()).isEqualTo(0L);
+        assertThat(one.getProduct()).isEqualTo("millefoglie-1");
+        assertThat(one.getProducer()).isEqualTo("Four");
+        assertThat(one.getQuantity()).isEqualTo(0);
+        assertThat(one.getStatus()).isEqualTo("NEW");
 
+
+    }
+
+    private ObjectMapper getObjectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        return objectMapper;
     }
 
 
     @Test
-    public void deserialiseMany() throws Exception {
+    public void deserialiseManyProductsAndTransformThemIntoOrderLines() throws Exception {
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        SimpleModule module = new SimpleModule(Controller.ProductDeserializer.class.getName(), new Version(1, 0, 0, null, null, null));
+        Controller.ProductDeserializer productDeserializer = new Controller.ProductDeserializer();
+        productDeserializer.setShop("Paris");
+        module.addDeserializer(OrderLine.class, productDeserializer);
+
+        objectMapper.registerModule(module);
 
         String jsonProductArray = new String(Files.readAllBytes(jsonManyProducts.toPath()));
-        System.out.println(jsonProductArray);
 
-
-        List<OrderLine> listProds = objectMapper.readValue(jsonProductArray, new TypeReference<List<OrderLine>>(){});
-        listProds.stream().forEach(System.out::println);
-    }
-
-    @Test
-    public void map() throws Exception{
-
-        String jsonProductArray = new String(Files.readAllBytes(jsonOneProduct.toPath()));
-        TypeReference<HashMap<String, String>> typeRef
-                = new TypeReference<HashMap<String, String>>() {};
-
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        Map<String, String> map = objectMapper.readValue(jsonProductArray, typeRef);
-        System.out.println(map);
-        System.out.println(map.get("name"));
+        List<OrderLine> listProds = objectMapper.readValue(jsonProductArray, new TypeReference<List<OrderLine>>() {});
+        assertThat(listProds).hasSize(3);
+        assertThat(listProds.get(0)).isInstanceOf(OrderLine.class);
 
     }
 
+
     @Test
-    public void list2map() throws Exception{
+    public void mergeProductAndOrderMap2List() throws Exception {
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        // parameters
+        String shop = "Paris";
+        DateTimeFormatter dateformatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate deadline = LocalDate.parse("2017-12-04", dateformatter);
 
+
+        // call the orders list
         String jsonOrdersArray = new String(Files.readAllBytes(jsonManyOrders.toPath()));
 
+        // decode the order list..
+        List<OrderLine> listOrders = objectMapper.readValue(jsonOrdersArray, new TypeReference<List<OrderLine>>() {
+        });
 
-        List<OrderLine> listProds = objectMapper.readValue(jsonOrdersArray, new TypeReference<List<OrderLine>>(){});
+        // ..and create a map lead by the product
+        Map<String, OrderLine> result1 = listOrders.stream()
+                .filter(order -> order.getShop().equals(shop) && order.getDeadline().equals(deadline))
+                .collect(Collectors
+                        .toMap(OrderLine::getProduct, o -> o, (oldValue, newValue) -> newValue));
+
+        assertThat(result1.keySet().size()).isEqualTo(2);
+        assertThat(result1.keySet()).containsOnly("Baba-1", "Baba-2");
 
 
-        Map<String, OrderLine> result1 = listProds.stream().collect(
-                Collectors.toMap(OrderLine::getProduct, o -> o));
+        // call the products list
+        String jsonProductArray = new String(Files.readAllBytes(jsonManyProducts.toPath()));
 
-        System.out.println(result1);
+        // decode the product list
+        objectMapper = getObjectMapper();
+
+        // and register the custom decoder
+        SimpleModule module = new SimpleModule(Controller.ProductDeserializer.class.getName(), new Version(1, 0, 0, null, null, null));
+        Controller.ProductDeserializer productDeserializer = new Controller.ProductDeserializer();
+        productDeserializer.setShop(shop);
+        module.addDeserializer(OrderLine.class, productDeserializer);
+        objectMapper.registerModule(module);
+
+        List<OrderLine> listProds = objectMapper.readValue(jsonProductArray, new TypeReference<List<OrderLine>>() {
+        });
+
+        // ..and create a map lead by the product
+        Map<String, OrderLine> result2 = listProds.stream()
+                .collect(Collectors
+                        .toMap(OrderLine::getProduct, o -> o));
+
+        assertThat(result2.keySet().size()).isEqualTo(3);
+        assertThat(result2.keySet()).containsOnly("Baba-1", "millefoglie-4", "millefoglie-6");
+
+        result2.putAll(result1);
+        assertThat(result2.keySet().size()).isEqualTo(4);
+        assertThat(result2.keySet()).containsOnly("Baba-1", "Baba-2", "millefoglie-4", "millefoglie-6");
+
+        //transform the map back to a list
+        List<OrderLine> result3 = result2.values().stream()
+                .collect(Collectors.toList());
+
+        assertThat(result3.size()).isEqualTo(4);
 
     }
 }
