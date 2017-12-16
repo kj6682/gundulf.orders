@@ -14,7 +14,7 @@ import java.time.LocalDate;
 
 @Data
 @Entity
-public class OrderLine {
+class OrderLine {
 
 
     @Id

@@ -66,10 +66,12 @@ class Controller {
      * and possibly anticipate the future productions
      */
     @GetMapping("/orders/producer/{producer}/group_by_product")
-    List<OrderLine> producerTodos(@PathVariable String producer) {
+    List<OrderSynthesis> producerTodos(@PathVariable String producer) {
 
-        return repository.findByProducerOrderByDeadline(producer).stream()
+        List<OrderSynthesis> result= repository.findByProducerOrderByDeadlineGroupByProduct(producer).stream()
                 .collect(Collectors.toList());
+
+         return result;
 
     }
 
