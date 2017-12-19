@@ -55,7 +55,7 @@ public class ProductLinesJsonTest {
         ObjectMapper objectMapper = new ObjectMapper();
         OrderLine order = new OrderLine();
         order.setId((long) 0);
-        order.setProduct("millefoglie");
+        order.setProduct("millefeuilles");
         order.setProducer("alibaba");
         objectMapper.writeValue(new File("target/two.json"), order);
 
@@ -73,8 +73,8 @@ public class ProductLinesJsonTest {
 
         OrderLine one = objectMapper.readValue(jsonProductArray, OrderLine.class);
         assertThat(one.getId()).isEqualTo(0L);
-        assertThat(one.getProduct()).isEqualTo("millefoglie-1");
-        assertThat(one.getProducer()).isEqualTo("Four");
+        assertThat(one.getProduct()).isEqualTo("millefeuilles-1");
+        assertThat(one.getProducer()).isEqualTo("four");
         assertThat(one.getQuantity()).isEqualTo(0);
         assertThat(one.getStatus()).isEqualTo("NEW");
 
@@ -130,7 +130,7 @@ public class ProductLinesJsonTest {
                         .toMap(OrderLine::getProduct, o -> o, (oldValue, newValue) -> newValue));
 
         assertThat(result1.keySet().size()).isEqualTo(2);
-        assertThat(result1.keySet()).containsOnly("Baba-1", "Baba-2");
+        assertThat(result1.keySet()).containsOnly("baba-1", "baba-2");
 
 
         // call the products list
@@ -155,11 +155,11 @@ public class ProductLinesJsonTest {
                         .toMap(OrderLine::getProduct, o -> o));
 
         assertThat(result2.keySet().size()).isEqualTo(3);
-        assertThat(result2.keySet()).containsOnly("Baba-1", "millefoglie-4", "millefoglie-6");
+        assertThat(result2.keySet()).containsOnly("baba-1", "millefeuilles-4", "millefeuilles-6");
 
         result2.putAll(result1);
         assertThat(result2.keySet().size()).isEqualTo(4);
-        assertThat(result2.keySet()).containsOnly("Baba-1", "Baba-2", "millefoglie-4", "millefoglie-6");
+        assertThat(result2.keySet()).containsOnly("baba-1", "baba-2", "millefeuilles-4", "millefeuilles-6");
 
         //transform the map back to a list
         List<OrderLine> result3 = result2.values().stream()

@@ -2,9 +2,9 @@
   "created" : "2017-12-03",
   "deadline": "2017-12-04",
   "executed": 0,
-  "producer": "Four",
-  "product": "Baba-1",
+  "producer": "four",
+  "product": "baba-1",
   "quantity": 10,
-  "shop": "Paris",
+  "shop": "paris",
   "status": "NEW"
 }

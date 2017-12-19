@@ -60,8 +60,8 @@ public class OrderToProducer {
                         o -> o.getProduct(),
                         summingInt(OrderLine::getQuantity)));
 
-        assertThat(result.get("Baba1").equals(10));
-        assertThat(result.get("Baba2").equals(20));
+        assertThat(result.get("baba1").equals(10));
+        assertThat(result.get("baba2").equals(20));
     }
 
     @Test
@@ -118,7 +118,7 @@ public class OrderToProducer {
         String serialized = new ObjectMapper().writeValueAsString(result);
         System.out.println(serialized);
 
-        assertThat(serialized.equals("[{\"deadline\":\"2017-12-04\",\"product\":\"Baba1\",\"quantity\":10},{\"deadline\":\"2017-12-04\",\"product\":\"Baba2\",\"quantity\":20},{\"deadline\":\"2017-12-08\",\"product\":\"Baba2\",\"quantity\":25}]"));
+        assertThat(serialized.equals("[{\"deadline\":\"2017-12-04\",\"product\":\"baba1\",\"quantity\":10},{\"deadline\":\"2017-12-04\",\"product\":\"baba2\",\"quantity\":20},{\"deadline\":\"2017-12-08\",\"product\":\"baba2\",\"quantity\":25}]"));
 
     }
 

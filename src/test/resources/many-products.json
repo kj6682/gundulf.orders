@@ -1,19 +1,19 @@
 [
   {
     "id": 46,
-    "name": "Baba",
+    "name": "baba",
     "category": "blue",
     "pieces": 1,
-    "producer": "Four",
+    "producer": "four",
     "created": "2017-07-13",
     "status": "VALID"
   },
   {
     "id": 47,
-    "name": "millefoglie",
+    "name": "millefeuilles",
     "category": "blue",
     "pieces": 4,
-    "producer": "Four",
+    "producer": "four",
     "created": "2017-07-13",
     "status": "VALID"
   },
@@ -22,7 +22,7 @@
     "name": "millefoglie",
     "category": "blue",
     "pieces": 6,
-    "producer": "Four",
+    "producer": "four",
     "created": "2017-07-13",
     "status": "VALID"
   }

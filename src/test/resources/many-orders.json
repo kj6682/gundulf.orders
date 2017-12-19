@@ -4,10 +4,10 @@
     "created" : "2017-12-03",
     "deadline": "2017-12-04",
     "executed": 0,
-    "producer": "Four",
-    "product": "Baba-1",
+    "producer": "four",
+    "product": "baba-1",
     "quantity": 10,
-    "shop": "Paris",
+    "shop": "paris",
     "status": "NEW"
   },
   {
@@ -15,10 +15,10 @@
     "created" : "2017-12-03",
     "deadline": "2017-12-04",
     "executed": 0,
-    "producer": "Four",
-    "product": "Baba-2",
+    "producer": "four",
+    "product": "baba-2",
     "quantity": 10,
-    "shop": "Paris",
+    "shop": "paris",
     "status": "NEW"
   },
   {
@@ -26,10 +26,10 @@
     "created" : "2017-12-03",
     "deadline": "2017-12-04",
     "executed": 0,
-    "producer": "Four",
-    "product": "Baba-2",
+    "producer": "four",
+    "product": "baba-2",
     "quantity": 10,
-    "shop": "Luxembourg",
+    "shop": "luxembourg",
     "status": "NEW"
   },
   {
@@ -37,10 +37,10 @@
     "created" : "2017-12-03",
     "deadline": "2017-12-08",
     "executed": 0,
-    "producer": "Four",
-    "product": "Baba-2",
+    "producer": "four",
+    "product": "baba-2",
     "quantity": 10,
-    "shop": "Luxembourg",
+    "shop": "luxembourg",
     "status": "NEW"
   },
   {
@@ -48,10 +48,10 @@
     "created" : "2017-12-03",
     "deadline": "2017-12-08",
     "executed": 0,
-    "producer": "Four",
-    "product": "Baba-2",
+    "producer": "four",
+    "product": "baba-2",
     "quantity": 15,
-    "shop": "Paris",
+    "shop": "paris",
     "status": "NEW"
   }
 ]
