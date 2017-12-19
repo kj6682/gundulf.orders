@@ -29,8 +29,8 @@ public class OrderLineRepositoryTest {
     @Test
     public void whenFindByProducerOrderByDeadline_thenReturnListOfOrders() {
         // given
-        OrderLine simple = new OrderLine("Paris",
-                "Four",
+        OrderLine simple = new OrderLine("paris",
+                "four",
                 "very delicious cookie",
                 10,
                 LocalDate.of(2017,12,3),
@@ -50,8 +50,8 @@ public class OrderLineRepositoryTest {
     @Test
     public void whenFindByShopOrderByCreated_thenReturnListOfOrders() {
         // given
-        OrderLine simple = new OrderLine("Paris",
-                "Entremets",
+        OrderLine simple = new OrderLine("paris",
+                "entremets",
                 "very delicious cake",
                 10,
                 LocalDate.of(2017,12,3),
@@ -71,8 +71,8 @@ public class OrderLineRepositoryTest {
     @Test
     public void whenSaveAnExistingObject_thenUpdate() {
         // given
-        OrderLine simple = new OrderLine("Paris",
-                "Dummy",
+        OrderLine simple = new OrderLine("paris",
+                "dummy",
                 "very delicious cake",
                 10,
                 LocalDate.of(2017,12,3),
@@ -81,7 +81,7 @@ public class OrderLineRepositoryTest {
         entityManager.flush();
 
 
-        List<OrderLine> found = orderLineRepository.findByProducerOrderByDeadline("Dummy");
+        List<OrderLine> found = orderLineRepository.findByProducerOrderByDeadline("dummy");
 
         assertThat(!found.isEmpty());
         assertThat(found.size() == 1);
@@ -89,8 +89,8 @@ public class OrderLineRepositoryTest {
         assertThat(found.get(0).getProduct().equals("very delicious cake"));
 
         //when
-        OrderLine other = new OrderLine("Paris",
-                "Dummy",
+        OrderLine other = new OrderLine("paris",
+                "dummy",
                 "very delicious cake indeed",
                 1500,
                 LocalDate.of(2017,12,3),
@@ -99,7 +99,7 @@ public class OrderLineRepositoryTest {
 
         orderLineRepository.save(other);
 
-        found = orderLineRepository.findByProducerOrderByDeadline("Dummy");
+        found = orderLineRepository.findByProducerOrderByDeadline("dummy");
 
         // then
         assertThat(!found.isEmpty());

@@ -111,7 +111,7 @@ public class ProductLinesJsonTest {
     public void mergeProductAndOrderMap2List() throws Exception {
 
         // parameters
-        String shop = "Paris";
+        String shop = "paris";
         DateTimeFormatter dateformatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate deadline = LocalDate.parse("2017-12-04", dateformatter);
 

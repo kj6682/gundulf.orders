@@ -38,9 +38,9 @@ public class OrderLineJsonTest {
 
     @Before
     public void setup() throws Exception{
-        simpleOrder = new OrderLine("Paris",
-                                      "Four",
-                                      "Baba-1",
+        simpleOrder = new OrderLine("paris",
+                                      "four",
+                                      "baba-1",
                                       10,
                                       LocalDate.of(2017,12,3),
                                       LocalDate.of(2017,12,4) );
