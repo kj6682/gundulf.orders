@@ -16,6 +16,7 @@ import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -166,6 +167,17 @@ public class ProductLinesJsonTest {
                 .collect(Collectors.toList());
 
         assertThat(result3.size()).isEqualTo(4);
+
+
+        System.out.println(result3);
+        List<OrderLine> result4 = result3.stream()
+                .sorted(
+                        Comparator.comparing(n->n.getProduct()))
+                .collect(Collectors.toList());
+
+        System.out.println(result4);
+
+
 
     }
 }

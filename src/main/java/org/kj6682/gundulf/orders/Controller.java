@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -122,7 +123,9 @@ class Controller {
 
         result.putAll(shopOrders);
 
+
         return result.values().stream()
+                .sorted(Comparator.comparing(n->n.getProduct()))
                 .collect(Collectors.toList());
     }
 
@@ -214,7 +217,7 @@ class Controller {
             order.setQuantity(0);
             order.setStatus("NEW");
             order.setCreated(LocalDate.now());
-
+            order.setDeadline(LocalDate.now().plusDays(1L));
             return order;
         }
     }//:)
