@@ -9,6 +9,15 @@
     "status": "VALID"
   },
   {
+    "id": 46,
+    "name": "baba",
+    "category": "blue",
+    "pieces": 2,
+    "producer": "four",
+    "created": "2017-07-13",
+    "status": "VALID"
+  },
+  {
     "id": 47,
     "name": "millefeuilles",
     "category": "blue",

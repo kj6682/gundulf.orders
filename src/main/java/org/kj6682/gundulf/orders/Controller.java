@@ -69,10 +69,10 @@ class Controller {
     @GetMapping("/orders/producer/{producer}/group_by_product")
     List<OrderSynthesis> producerTodos(@PathVariable String producer) {
 
-        List<OrderSynthesis> result= repository.findByProducerOrderByDeadlineGroupByProduct(producer).stream()
+        List<OrderSynthesis> result = repository.findByProducerOrderByDeadlineGroupByProduct(producer).stream()
                 .collect(Collectors.toList());
 
-         return result;
+        return result;
 
     }
 
@@ -105,28 +105,28 @@ class Controller {
                                         @PathVariable String producer) {
 
 
-        Map<String, OrderLine> result;
+        Map<String, OrderLine> orderLineMap = getProductLines(shop, producer);
 
-        try {
+        Map<String, OrderLine> shopOrders = getOrderLines(shop, producer);
 
-            result = getProductLines(shop, producer);
+        orderLineMap.putAll(shopOrders);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            result = new HashMap<String, OrderLine>();
-        }
+        List<OrderLine> result = orderLineMap.values().stream().collect(Collectors.toList());
 
-       Map<String, OrderLine> shopOrders = repository.findByProducerOrderByDeadline(producer).stream()
+        result.sort((l, r) -> {
+            if(l.getDeadline().equals(r.getDeadline())){
+                return l.getProduct().compareTo(r.getProduct());
+            }
+            return l.getDeadline().compareTo(r.getDeadline());
+        });
+        return result;
+    }
+
+    private Map<String, OrderLine> getOrderLines(@PathVariable String shop, @PathVariable String producer) {
+        return repository.findByProducerOrderByDeadline(producer).stream()
                 .filter(order -> order.getShop().equals(shop)) //&& order.getDeadline().equals(deadline)
                 .collect(Collectors
-                        .toMap(OrderLine::getProduct, o -> o)); // there should be no duplicates in the original query
-
-        result.putAll(shopOrders);
-
-
-        return result.values().stream()
-                .sorted(Comparator.comparing(n->n.getProduct()))
-                .collect(Collectors.toList());
+                        .toMap(OrderLine::getDeadLineAndProduct, o -> o));
     }
 
     /**
@@ -136,7 +136,7 @@ class Controller {
      * @return the list of order lines created with the product list
      * @throws IOException
      */
-    private Map<String, OrderLine> getProductLines(String shop, String producer) throws IOException {
+    private Map<String, OrderLine> getProductLines(String shop, String producer) {
 
         SimpleModule module = new SimpleModule(ProductDeserializer.class.getName(), new Version(1, 0, 0, null, null, null));
         Controller.ProductDeserializer productDeserializer = new Controller.ProductDeserializer();
@@ -149,11 +149,19 @@ class Controller {
 
         String jsonProds = apiBouncer.get(products + "/" + producer).getBody();
 
-        List<OrderLine> productLines = objectMapper.readValue(jsonProds, new TypeReference<List<OrderLine>>() {});
+        Map<String, OrderLine> result;
+        try{
+            List<OrderLine> productLines = objectMapper.readValue(jsonProds, new TypeReference<List<OrderLine>>() {});
 
-        Map<String, OrderLine> result = productLines.stream()
+            result = productLines.stream()
                 .collect(Collectors
-                        .toMap(OrderLine::getProduct, o -> o));
+                        .toMap(OrderLine::getDeadLineAndProduct, o -> o));
+
+        }catch (IOException e){
+            result = new HashMap<>();
+            e.printStackTrace();
+        }
+
         return result;
     }
 

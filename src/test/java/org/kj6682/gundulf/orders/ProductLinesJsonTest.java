@@ -58,6 +58,7 @@ public class ProductLinesJsonTest {
         order.setId((long) 0);
         order.setProduct("millefeuilles");
         order.setProducer("alibaba");
+        order.setDeadline(LocalDate.now());
         objectMapper.writeValue(new File("target/two.json"), order);
 
     }
@@ -102,82 +103,10 @@ public class ProductLinesJsonTest {
         String jsonProductArray = new String(Files.readAllBytes(jsonManyProducts.toPath()));
 
         List<OrderLine> listProds = objectMapper.readValue(jsonProductArray, new TypeReference<List<OrderLine>>() {});
-        assertThat(listProds).hasSize(3);
+        assertThat(listProds).hasSize(4);
         assertThat(listProds.get(0)).isInstanceOf(OrderLine.class);
 
     }
 
 
-    @Test
-    public void mergeProductAndOrderMap2List() throws Exception {
-
-        // parameters
-        String shop = "paris";
-        DateTimeFormatter dateformatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate deadline = LocalDate.parse("2017-12-04", dateformatter);
-
-
-        // call the orders list
-        String jsonOrdersArray = new String(Files.readAllBytes(jsonManyOrders.toPath()));
-
-        // decode the order list..
-        List<OrderLine> listOrders = objectMapper.readValue(jsonOrdersArray, new TypeReference<List<OrderLine>>() {
-        });
-
-        // ..and create a map lead by the product
-        Map<String, OrderLine> result1 = listOrders.stream()
-                .filter(order -> order.getShop().equals(shop) && order.getDeadline().equals(deadline))
-                .collect(Collectors
-                        .toMap(OrderLine::getProduct, o -> o, (oldValue, newValue) -> newValue));
-
-        assertThat(result1.keySet().size()).isEqualTo(2);
-        assertThat(result1.keySet()).containsOnly("baba-1", "baba-2");
-
-
-        // call the products list
-        String jsonProductArray = new String(Files.readAllBytes(jsonManyProducts.toPath()));
-
-        // decode the product list
-        objectMapper = getObjectMapper();
-
-        // and register the custom decoder
-        SimpleModule module = new SimpleModule(Controller.ProductDeserializer.class.getName(), new Version(1, 0, 0, null, null, null));
-        Controller.ProductDeserializer productDeserializer = new Controller.ProductDeserializer();
-        productDeserializer.setShop(shop);
-        module.addDeserializer(OrderLine.class, productDeserializer);
-        objectMapper.registerModule(module);
-
-        List<OrderLine> listProds = objectMapper.readValue(jsonProductArray, new TypeReference<List<OrderLine>>() {
-        });
-
-        // ..and create a map lead by the product
-        Map<String, OrderLine> result2 = listProds.stream()
-                .collect(Collectors
-                        .toMap(OrderLine::getProduct, o -> o));
-
-        assertThat(result2.keySet().size()).isEqualTo(3);
-        assertThat(result2.keySet()).containsOnly("baba-1", "millefeuilles-4", "millefeuilles-6");
-
-        result2.putAll(result1);
-        assertThat(result2.keySet().size()).isEqualTo(4);
-        assertThat(result2.keySet()).containsOnly("baba-1", "baba-2", "millefeuilles-4", "millefeuilles-6");
-
-        //transform the map back to a list
-        List<OrderLine> result3 = result2.values().stream()
-                .collect(Collectors.toList());
-
-        assertThat(result3.size()).isEqualTo(4);
-
-
-        System.out.println(result3);
-        List<OrderLine> result4 = result3.stream()
-                .sorted(
-                        Comparator.comparing(n->n.getProduct()))
-                .collect(Collectors.toList());
-
-        System.out.println(result4);
-
-
-
-    }
 }

@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Data
 @Entity
@@ -49,5 +50,11 @@ class OrderLine {
         this.deadline = deadline;
         this.status = "NEW";
         this.executed = 0;
+    }
+
+    public String getDeadLineAndProduct(){
+
+        DateTimeFormatter formatters = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return this.getDeadline().format(formatters).concat(this.getProduct());
     }
 }//:)

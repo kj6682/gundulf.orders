@@ -40,7 +40,7 @@ public class OrderLineJsonTest {
     public void setup() throws Exception{
         simpleOrder = new OrderLine("paris",
                                       "four",
-                                      "baba-1",
+                                      "millefeuilles-6",
                                       10,
                                       LocalDate.of(2017,12,3),
                                       LocalDate.of(2017,12,4) );

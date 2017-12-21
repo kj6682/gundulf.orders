@@ -31,7 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @RunWith(SpringRunner.class)
 @JsonTest
-public class OrderToProducer {
+public class OrderToProducerTest {
 
     File jsonMany;
 
