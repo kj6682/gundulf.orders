@@ -16,7 +16,7 @@
     "producer": "four",
     "product": "baba-4",
     "quantity": 10,
-    "shop": "nantes",
+    "shop": "luxembourg",
     "status": "NEW"
   },
   {
@@ -36,7 +36,7 @@
     "producer": "entremets",
     "product": "tiramisu-8",
     "quantity": 2,
-    "shop": "nantes",
+    "shop": "luxembourg",
     "status": "NEW"
   },
   {
@@ -46,7 +46,67 @@
     "producer": "four",
     "product": "baba-1",
     "quantity": 200,
-    "shop": "nantes",
+    "shop": "luxembourg",
+    "status": "NEW"
+  },
+  {
+    "created" : "2017-12-03",
+    "deadline": "2017-12-22",
+    "executed": 0,
+    "producer": "entremets",
+    "product": "tiramisu-1",
+    "quantity": 200,
+    "shop": "luxembourg",
+    "status": "NEW"
+  },
+  {
+    "created" : "2017-12-03",
+    "deadline": "2017-12-22",
+    "executed": 0,
+    "producer": "entremets",
+    "product": "tiramisu-1",
+    "quantity": 15,
+    "shop": "paris",
+    "status": "NEW"
+  },
+  {
+    "created" : "2017-12-03",
+    "deadline": "2017-12-22",
+    "executed": 0,
+    "producer": "entremets",
+    "product": "tiramisu-2",
+    "quantity": 300,
+    "shop": "luxembourg",
+    "status": "NEW"
+  },
+  {
+    "created" : "2017-12-03",
+    "deadline": "2017-12-22",
+    "executed": 0,
+    "producer": "entremets",
+    "product": "tiramisu-2",
+    "quantity": 30,
+    "shop": "paris",
+    "status": "NEW"
+  },
+  {
+    "created" : "2017-12-03",
+    "deadline": "2017-12-22",
+    "executed": 0,
+    "producer": "entremets",
+    "product": "tiramisu-4",
+    "quantity": 800,
+    "shop": "luxembourg",
+    "status": "NEW"
+  },
+  {
+    "created" : "2017-12-03",
+    "deadline": "2017-12-22",
+    "executed": 0,
+    "producer": "entremets",
+    "product": "tiramisu-4",
+    "quantity": 45,
+    "shop": "paris",
     "status": "NEW"
   }
 ]
