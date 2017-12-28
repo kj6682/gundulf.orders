@@ -176,6 +176,18 @@ class Controller {
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
+    @PutMapping(value = "/orders/shop/{shop}/{id}")
+    ResponseEntity<?> update(@PathVariable String shop,
+                             @PathVariable Long id,
+                             @RequestBody OrderLine order) {
+        Assert.notNull(order, "Order can not be empty");
+        //TODO check the producer
+        OrderLine ol = repository.findOne(id);
+        ol.setQuantity(order.getQuantity());
+        OrderLine result = repository.save(ol);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
     @DeleteMapping(value = "/orders/shop/{shop}/{id}")
     void delete(@PathVariable String shop,
                 @PathVariable(required = true) Long id) {
