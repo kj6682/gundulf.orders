@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -123,8 +124,11 @@ class Controller {
     }
 
     private Map<String, OrderLine> getOrderLines(@PathVariable String shop, @PathVariable String producer) {
+
+        LocalDate deadline = LocalDate.now().plusDays(1);
+
         return repository.findByProducerOrderByDeadline(producer).stream()
-                .filter(order -> order.getShop().equals(shop)) //&& order.getDeadline().equals(deadline)
+                .filter(order -> order.getShop().equals(shop) && order.getDeadline().equals(deadline) )
                 .collect(Collectors
                         .toMap(OrderLine::getDeadLineAndProduct, o -> o));
     }
