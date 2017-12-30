@@ -88,8 +88,7 @@ class Controller {
     @GetMapping("/orders/shop/{shop}")
     List<OrderLine> shopOrders(@PathVariable String shop) {
 
-        return repository.findByShopOrderByCreated(shop).stream()
-                .collect(Collectors.toList());
+        return repository.findByShopOrderByDeadline(shop);
 
     }
 
@@ -127,8 +126,12 @@ class Controller {
 
         LocalDate deadline = LocalDate.now().plusDays(1);
 
-        return repository.findByProducerOrderByDeadline(producer).stream()
+        /*return repository.findByProducerOrderByDeadline(producer).stream()
                 .filter(order -> order.getShop().equals(shop) && order.getDeadline().equals(deadline) )
+                .collect(Collectors
+                        .toMap(OrderLine::getDeadLineAndProduct, o -> o));
+                        */
+        return repository.findByProducerAndDeadlineOrderByDeadline(producer, deadline).stream()
                 .collect(Collectors
                         .toMap(OrderLine::getDeadLineAndProduct, o -> o));
     }

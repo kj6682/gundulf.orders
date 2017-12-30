@@ -60,7 +60,7 @@ public class OrderLineRepositoryTest {
         entityManager.flush();
 
         // when
-        List<OrderLine> found = orderLineRepository.findByShopOrderByCreated("Paris");
+        List<OrderLine> found = orderLineRepository.findByShopOrderByDeadline("Paris");
 
         // then
         assertThat(!found.isEmpty());

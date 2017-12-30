@@ -4,14 +4,22 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface OrderLineRepository extends CrudRepository<OrderLine, Long> {
 
 
     List<OrderLine> findByProducerOrderByDeadline(@Param("producer") String producer);
-    List<OrderLine> findByShopOrderByCreated(@Param("shop") String shop);
+    List<OrderLine> findByProducerAndDeadlineOrderByDeadline(@Param("producer") String producer, @Param("deadline")LocalDate deadline);
 
-    @Query(value = "select new org.kj6682.gundulf.orders.OrderSynthesis(v.deadline, v.product, SUM(v.quantity)) from OrderLine v where v.producer = ?1 group by (v.deadline, v.product) order by (v.deadline, v.product) asc")
+    List<OrderLine> findByShopOrderByDeadline(@Param("shop") String shop);
+
+    @Query(value =  "select " +
+                    "new org.kj6682.gundulf.orders.OrderSynthesis(v.deadline, v.product, SUM(v.quantity)) " +
+                    "from OrderLine v " +
+                    "where v.producer = ?1 " +
+                    "group by (v.deadline, v.product) " +
+                    "order by (v.deadline, v.product) asc")
     List<OrderSynthesis> findByProducerGroupByProductOrderByDeadline(@Param("producer") String producer);
 }
