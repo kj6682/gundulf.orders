@@ -70,7 +70,7 @@ class Controller {
     @GetMapping("/orders/producer/{producer}/group_by_product")
     List<OrderSynthesis> producerTodos(@PathVariable String producer) {
 
-        List<OrderSynthesis> result = repository.findByProducerOrderByDeadlineGroupByProduct(producer).stream()
+        List<OrderSynthesis> result = repository.findByProducerGroupByProductOrderByDeadline(producer).stream()
                 .collect(Collectors.toList());
 
         return result;
