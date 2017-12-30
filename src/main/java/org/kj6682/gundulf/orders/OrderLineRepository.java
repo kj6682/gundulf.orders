@@ -22,12 +22,14 @@ public interface OrderLineRepository extends CrudRepository<OrderLine, Long> {
             "order by (v.deadline, v.product) asc")
     List<OrderLine> findByShopAndProducerAndDeadlineOrderByDeadlineAndProductAsc(@Param("shop") String shop, @Param("producer") String producer, @Param("deadline")LocalDate deadline);
 
+
     @Query(value =  "select v " +
             "from OrderLine v " +
             "where v.shop = ?1 " +
             "order by (v.deadline, v.product) asc")
     List<OrderLine> findByShopOrderByDeadlineAndProductAsc(@Param("shop") String shop);
 
+    
     @Query(value =  "select " +
                     "new org.kj6682.gundulf.orders.OrderSynthesis(v.deadline, v.product, SUM(v.quantity)) " +
                     "from OrderLine v " +
