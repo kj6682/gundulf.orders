@@ -39,7 +39,7 @@ public class OrderLineRepositoryTest {
         entityManager.flush();
 
         // when
-        List<OrderLine> found = orderLineRepository.findByProducerOrderByDeadline("Four");
+        List<OrderLine> found = orderLineRepository.findByProducerOrderByDeadlineAndProductAsc("Four");
 
         // then
         assertThat(!found.isEmpty());
@@ -60,7 +60,7 @@ public class OrderLineRepositoryTest {
         entityManager.flush();
 
         // when
-        List<OrderLine> found = orderLineRepository.findByShopOrderByDeadline("Paris");
+        List<OrderLine> found = orderLineRepository.findByShopOrderByDeadlineAndProductAsc("Paris");
 
         // then
         assertThat(!found.isEmpty());
@@ -81,7 +81,7 @@ public class OrderLineRepositoryTest {
         entityManager.flush();
 
 
-        List<OrderLine> found = orderLineRepository.findByProducerOrderByDeadline("dummy");
+        List<OrderLine> found = orderLineRepository.findByProducerOrderByDeadlineAndProductAsc("dummy");
 
         assertThat(!found.isEmpty());
         assertThat(found.size() == 1);
@@ -99,7 +99,7 @@ public class OrderLineRepositoryTest {
 
         orderLineRepository.save(other);
 
-        found = orderLineRepository.findByProducerOrderByDeadline("dummy");
+        found = orderLineRepository.findByProducerOrderByDeadlineAndProductAsc("dummy");
 
         // then
         assertThat(!found.isEmpty());

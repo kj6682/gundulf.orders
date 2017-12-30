@@ -19,10 +19,7 @@ import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +51,7 @@ class Controller {
     @GetMapping("/orders/producer/{producer}")
     List<OrderLine> producerOrders(@PathVariable String producer) {
 
-        return repository.findByProducerOrderByDeadline(producer);
+        return repository.findByProducerOrderByDeadlineAndProductAsc(producer);
 
     }
 
@@ -86,7 +83,7 @@ class Controller {
     @GetMapping("/orders/shop/{shop}")
     List<OrderLine> shopOrders(@PathVariable String shop) {
 
-        return repository.findByShopOrderByDeadline(shop);
+        return repository.findByShopOrderByDeadlineAndProductAsc(shop);
 
     }
 
@@ -124,7 +121,7 @@ class Controller {
 
         LocalDate deadline = LocalDate.now().plusDays(1);
 
-        return repository.findByProducerAndDeadlineOrderByDeadline(producer, deadline).stream()
+        return repository.findByShopAndProducerAndDeadlineOrderByDeadlineAndProductAsc(shop, producer, deadline).stream()
                 .collect(Collectors
                         .toMap(OrderLine::getDeadLineAndProduct, o -> o));
     }

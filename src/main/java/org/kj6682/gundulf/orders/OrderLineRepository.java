@@ -9,11 +9,24 @@ import java.util.List;
 
 public interface OrderLineRepository extends CrudRepository<OrderLine, Long> {
 
+    @Query(value =  "select v " +
+            "from OrderLine v " +
+            "where v.producer = ?1 " +
+            "order by (v.deadline, v.product) asc")
+    List<OrderLine> findByProducerOrderByDeadlineAndProductAsc(@Param("producer") String producer);
 
-    List<OrderLine> findByProducerOrderByDeadline(@Param("producer") String producer);
-    List<OrderLine> findByProducerAndDeadlineOrderByDeadline(@Param("producer") String producer, @Param("deadline")LocalDate deadline);
+    
+    @Query(value =  "select v " +
+            "from OrderLine v " +
+            "where v.shop =?1 and v.producer = ?2 and v.deadline = ?3 " +
+            "order by (v.deadline, v.product) asc")
+    List<OrderLine> findByShopAndProducerAndDeadlineOrderByDeadlineAndProductAsc(@Param("shop") String shop, @Param("producer") String producer, @Param("deadline")LocalDate deadline);
 
-    List<OrderLine> findByShopOrderByDeadline(@Param("shop") String shop);
+    @Query(value =  "select v " +
+            "from OrderLine v " +
+            "where v.shop = ?1 " +
+            "order by (v.deadline, v.product) asc")
+    List<OrderLine> findByShopOrderByDeadlineAndProductAsc(@Param("shop") String shop);
 
     @Query(value =  "select " +
                     "new org.kj6682.gundulf.orders.OrderSynthesis(v.deadline, v.product, SUM(v.quantity)) " +
