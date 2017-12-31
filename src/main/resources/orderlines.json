@@ -108,5 +108,15 @@
     "quantity": 45,
     "shop": "paris",
     "status": "NEW"
+  },
+  {
+    "created" : "2017-12-31",
+    "deadline": "2018-01-01",
+    "executed": 0,
+    "producer": "entremets",
+    "product": "tiramisu-2",
+    "quantity": 300,
+    "shop": "luxembourg",
+    "status": "NEW"
   }
 ]
