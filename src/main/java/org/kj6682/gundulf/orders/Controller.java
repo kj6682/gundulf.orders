@@ -42,6 +42,20 @@ class Controller {
     private String products;
 
     /**
+     * ORDER - the_admin_lists_all_the_orders
+     * <p>
+     * as an admin
+     * I want to list all the orders
+     * so that I can do some maintenance
+     */
+    @GetMapping("/orders")
+    List<OrderLine> listAll() {
+
+        return repository.findAll();
+
+    }
+
+    /**
      * ORDER-001 - the_producer_lists_the_orders
      * <p>
      * as a producer
@@ -63,7 +77,7 @@ class Controller {
      * so that I can facilitate my daily work
      * and possibly anticipate the future productions
      */
-    @GetMapping("/orders/producer/{producer}/group_by_product")
+    @GetMapping("/orders/producer/{producer}/todo")
     List<OrderSynthesis> producerTodos(@PathVariable String producer) {
 
         List<OrderSynthesis> result = repository.findByProducerGroupByProductOrderByDeadline(producer);
@@ -96,7 +110,7 @@ class Controller {
      * and possibly modify it
      */
     @GetMapping("/orders/shop/{shop}/products/{producer}")
-    List<OrderLine> shopCatalogAndCaddy(@PathVariable String shop,
+    List<OrderLine> dailyOrders(@PathVariable String shop,
                                         @PathVariable String producer) {
 
 
@@ -163,12 +177,11 @@ class Controller {
     }
 
 
-    @PostMapping(value = "/orders/shop/{shop}/to/{producer}")
+    @PostMapping(value = "/orders/shop/{shop}")
     ResponseEntity<?> create(@PathVariable String shop,
-                             @PathVariable String producer,
                              @RequestBody OrderLine order) {
         Assert.notNull(order, "Order can not be empty");
-        //TODO check the producer
+
         OrderLine result = repository.save(order);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }

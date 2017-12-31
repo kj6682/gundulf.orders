@@ -9,6 +9,8 @@ import java.util.List;
 
 public interface OrderLineRepository extends CrudRepository<OrderLine, Long> {
 
+    List<OrderLine> findAll();
+
     @Query(value =  "select v " +
             "from OrderLine v " +
             "where v.producer = ?1 " +
