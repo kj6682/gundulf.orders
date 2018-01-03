@@ -7,7 +7,7 @@ import org.kj6682.commons.LocalDateSerializer;
 
 import java.time.LocalDate;
 
-class OrderSynthesis {
+class ToDo {
 
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonDeserialize(using = LocalDateDeserializer.class)
@@ -15,13 +15,13 @@ class OrderSynthesis {
     String product;
     Integer quantity;
 
-    public OrderSynthesis(LocalDate deadline, String product, Long quantity) {
+    public ToDo(LocalDate deadline, String product, Long quantity) {
         this.deadline = deadline;
         this.product = product;
         this.quantity = quantity.intValue();
     }
 
-    public OrderSynthesis() {
+    public ToDo() {
     }
 
     public LocalDate getDeadline() {
@@ -50,11 +50,24 @@ class OrderSynthesis {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("OrderSynthesis{");
+        final StringBuilder sb = new StringBuilder("ToDo{");
         sb.append("deadline=").append(deadline);
         sb.append(", product='").append(product).append('\'');
         sb.append(", quantity=").append(quantity);
         sb.append('}');
+        return sb.toString();
+    }
+
+    static String csvHeader(){
+        return "DEADLINE;PRODUCT;QUANTITY\n";
+    }
+
+    String asCsv() {
+        final StringBuilder sb = new StringBuilder();
+        sb.append(deadline).append(';');
+        sb.append(product).append(';');
+        sb.append(quantity).append(';');
+        sb.append("\n");
         return sb.toString();
     }
 

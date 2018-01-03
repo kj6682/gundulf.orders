@@ -33,10 +33,10 @@ public interface OrderLineRepository extends CrudRepository<OrderLine, Long> {
 
     
     @Query(value =  "select " +
-                    "new org.kj6682.gundulf.orders.OrderSynthesis(v.deadline, v.product, SUM(v.quantity)) " +
+                    "new org.kj6682.gundulf.orders.ToDo(v.deadline, v.product, SUM(v.quantity)) " +
                     "from OrderLine v " +
                     "where v.producer = ?1 " +
                     "group by (v.deadline, v.product) " +
                     "order by (v.deadline, v.product) asc")
-    List<OrderSynthesis> findByProducerGroupByProductOrderByDeadline(@Param("producer") String producer);
+    List<ToDo> findByProducerGroupByProductOrderByDeadline(@Param("producer") String producer);
 }

@@ -3,13 +3,9 @@ package org.kj6682.gundulf.orders;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.kj6682.commons.LocalDateDeserializer;
-import org.kj6682.commons.LocalDateSerializer;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.ResourceUtils;
@@ -89,7 +85,7 @@ public class OrderToProducerTest {
         niceTry2.forEach((k,v) -> {
             String chunks[] = k.split(",");
 
-            OrderSynthesis syn = new OrderSynthesis();
+            ToDo syn = new ToDo();
 
             syn.setProduct(chunks[1]);
 
@@ -101,10 +97,10 @@ public class OrderToProducerTest {
         });
         System.out.println(niceTry2);
 
-        List<OrderSynthesis> result = niceTry2.keySet().stream().map( k -> {
+        List<ToDo> result = niceTry2.keySet().stream().map(k -> {
                     String chunks[] = k.split(",");
 
-                    OrderSynthesis syn = new OrderSynthesis();
+                    ToDo syn = new ToDo();
 
                     syn.setProduct(chunks[1]);
 
