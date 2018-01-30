@@ -242,8 +242,6 @@ class Controller {
             JsonNode node = codec.readTree(parser);
 
             // try catch block
-            JsonNode jId = node.get("id");
-            Long id = jId.asLong();
             order.setId(0L);
 
             JsonNode jProduct = node.get("name");
