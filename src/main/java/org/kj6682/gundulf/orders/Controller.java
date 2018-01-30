@@ -39,6 +39,9 @@ class Controller {
     ApiBouncer apiBouncer;
     @Autowired
     private OrderLineRepository repository;
+    @Autowired
+    private SpecialOrderRepository specialOrderRepository;
+
     @Value("${API_PRODUCTS}")
     private String products;
 
