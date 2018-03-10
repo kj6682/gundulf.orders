@@ -18,7 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -29,10 +28,10 @@ import java.util.stream.Collectors;
 /**
  * Created by luigi on 02/12/2017.
  */
-@Api(value = "orders", description = "Orders API")
+@Api(value = "shop-orders", description = "Shop - Orders API")
 @RestController
 @RequestMapping("/api")
-class Controller {
+class ShopController {
 
 
     @Autowired
@@ -40,55 +39,10 @@ class Controller {
     @Autowired
     private OrderLineRepository repository;
     @Autowired
-    private SpecialOrderRepository specialOrderRepository;
+    private CustomerOrderRepository customerOrderRepository;
 
     @Value("${API_PRODUCTS}")
     private String products;
-
-    /**
-     * ORDER - the_admin_lists_all_the_orders
-     * <p>
-     * as an admin
-     * I want to list all the orders
-     * so that I can do some maintenance
-     */
-    @GetMapping("/orders")
-    List<OrderLine> GET_findAll() {
-
-        return repository.findAll();
-
-    }
-
-    /**
-     * ORDER-001 - the_producer_lists_the_orders
-     * <p>
-     * as a producer
-     * I want to list all my order lines
-     * so that I can facilitate dispatching the products
-     */
-    @GetMapping("/orders/producer/{producer}")
-    List<OrderLine> GET_producerOrders(@PathVariable String producer) {
-
-        return repository.findByProducerOrderByDeadlineAndProductAsc(producer);
-
-    }
-
-    /**
-     * ORDER-002 - the_producer_lists_the_daily_todo
-     * <p>
-     * as a producer
-     * I want to get my todolist
-     * so that I can facilitate my daily work
-     * and possibly anticipate the future productions
-     */
-    @GetMapping("/orders/producer/{producer}/todo")
-    List<ToDo> GET_producerTodos(@PathVariable String producer) {
-
-        List<ToDo> result = repository.findByProducerGroupByProductOrderByDeadline(producer);
-
-        return result;
-
-    }
 
     /**
      * ORDER-003 - the_shop_holder_lists_the_orders
@@ -99,7 +53,7 @@ class Controller {
      * and possibly validate returns
      */
     @GetMapping("/orders/shop/{shop}")
-    List<OrderLine> GET_shopOrders(@PathVariable String shop) {
+    List<OrderLine> getShopOrders(@PathVariable String shop) {
 
         return repository.findByShopOrderByDeadlineAndProductAsc(shop);
 
@@ -114,8 +68,8 @@ class Controller {
      * and possibly modify it
      */
     @GetMapping("/orders/shop/{shop}/products/{producer}")
-    List<OrderLine> GET_shopDailyOrders(@PathVariable String shop,
-                                        @PathVariable String producer) {
+    List<OrderLine> getProductsAndOrderLines(@PathVariable String shop,
+                                             @PathVariable String producer) {
 
 
         Map<String, OrderLine> orderLineMap = mapProductLines(shop, producer);
@@ -154,7 +108,7 @@ class Controller {
     private Map<String, OrderLine> mapProductLines(String shop, String producer) {
 
         SimpleModule module = new SimpleModule(ProductDeserializer.class.getName(), new Version(1, 0, 0, null, null, null));
-        Controller.ProductDeserializer productDeserializer = new Controller.ProductDeserializer();
+        ShopController.ProductDeserializer productDeserializer = new ShopController.ProductDeserializer();
         productDeserializer.setShop(shop);
         module.addDeserializer(OrderLine.class, productDeserializer);
 
@@ -182,8 +136,8 @@ class Controller {
 
 
     @PostMapping(value = "/orders/shop/{shop}")
-    ResponseEntity<?> POST_createOrderLine(@PathVariable String shop,
-                             @RequestBody OrderLine order) {
+    ResponseEntity<?> createOrderLine(@PathVariable String shop,
+                                                @RequestBody OrderLine order) {
         Assert.notNull(order, "Order can not be empty");
 
         OrderLine result = repository.save(order);
@@ -191,9 +145,9 @@ class Controller {
     }
 
     @PutMapping(value = "/orders/shop/{shop}/{id}")
-    ResponseEntity<?> PUT_updateOrderLine(@PathVariable String shop,
-                             @PathVariable Long id,
-                             @RequestBody OrderLine order) {
+    ResponseEntity<?> updateOrderLine(@PathVariable String shop,
+                                               @PathVariable Long id,
+                                               @RequestBody OrderLine order) {
         Assert.notNull(order, "Order can not be empty");
         //TODO check the producer
         OrderLine ol = repository.findOne(id);
@@ -203,24 +157,12 @@ class Controller {
     }
 
     @DeleteMapping(value = "/orders/shop/{shop}/{id}")
-    void DELETE_OrderLine(@PathVariable String shop,
-                @PathVariable(required = true) Long id) {
+    void deleteOrderLine(@PathVariable String shop,
+                               @PathVariable(required = true) Long id) {
         //TODO check the shop
         repository.delete(id);
     }
 
-    //@RequestMapping(value = "/orders/producer/{producer}/orders.csv")
-    public void GET_listTODOAsCSV(@PathVariable String producer, HttpServletResponse response) throws IOException{
-        response.setContentType("text/csv; charset=utf-8");
-
-        List<ToDo> todos = repository.findByProducerGroupByProductOrderByDeadline(producer);
-
-        StringBuilder sb = new StringBuilder(ToDo.csvHeader());
-        for(ToDo order : todos){
-            sb.append(order.asCsv());
-        }
-        response.getWriter().print(sb.toString());
-    }
 
     static class ProductDeserializer extends StdDeserializer<OrderLine> {
 

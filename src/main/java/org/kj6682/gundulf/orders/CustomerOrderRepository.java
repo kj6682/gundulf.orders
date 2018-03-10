@@ -4,6 +4,6 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface SpecialOrderRepository extends CrudRepository<SpecialOrder, Long> {
-    List<SpecialOrder> findAll();
+public interface CustomerOrderRepository extends CrudRepository<CustomerOrder, Long> {
+    List<CustomerOrder> findAll();
 }

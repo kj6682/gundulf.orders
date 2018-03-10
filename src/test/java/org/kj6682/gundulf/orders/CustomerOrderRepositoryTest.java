@@ -9,10 +9,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,13 +17,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(SpringRunner.class)
 @DataJpaTest
 @ActiveProfiles( profiles={"h2"})
-public class SpecialOrderRepositoryTest {
+public class CustomerOrderRepositoryTest {
 
     @Autowired
     private TestEntityManager entityManager;
 
     @Autowired
-    private SpecialOrderRepository specialOrderRepository;
+    private CustomerOrderRepository customerOrderRepository;
 
     @Autowired
     private OrderLineRepository orderLineRepository;
@@ -49,7 +46,7 @@ public class SpecialOrderRepositoryTest {
                 LocalDate.of(2017,12,3),
                 LocalDate.of(2017,12,4) );
 
-        SpecialOrder so = new SpecialOrder();
+        CustomerOrder so = new CustomerOrder();
         so.setDeadline(LocalDate.of(2018,01,31));
         so.getOrders().add(simple1);
         so.getOrders().add(simple2);
@@ -57,10 +54,10 @@ public class SpecialOrderRepositoryTest {
         Integer numberOfOrdersBefore = orderLineRepository.findAll().size();
 
         // when
-        specialOrderRepository.save(so);
+        customerOrderRepository.save(so);
 
         // then
-        List<SpecialOrder> sos = specialOrderRepository.findAll();
+        List<CustomerOrder> sos = customerOrderRepository.findAll();
         assertThat(sos.size() != 0);
 
         Integer numberOfOrdersAfter = orderLineRepository.findAll().size();
