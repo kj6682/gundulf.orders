@@ -1,0 +1,33 @@
+{
+  "id": null,
+  "customer": "ricky rat",
+  "address": "23, piazza quattro formaggi, ratcity",
+  "created": "2018-01-31",
+  "deadline": "2018-02-28",
+  "orders": [
+    {
+      "id": null,
+      "shop": "paris",
+      "producer": "four",
+      "product": "millefeuilles-6",
+      "quantity": 10,
+      "executed": 0,
+      "status": "NEW",
+      "created": "2017-12-03",
+      "deadline": "2017-12-04",
+      "deadLineAndProduct": "2017-12-04millefeuilles-6"
+    },
+    {
+      "id": null,
+      "shop": "luxembourg",
+      "producer": "tartes",
+      "product": "tiramisu-2",
+      "quantity": 10,
+      "executed": 0,
+      "status": "NEW",
+      "created": "2017-12-03",
+      "deadline": "2017-12-04",
+      "deadLineAndProduct": "2017-12-04tiramisu-2"
+    }
+  ]
+}

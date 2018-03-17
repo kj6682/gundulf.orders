@@ -66,8 +66,8 @@ public class ProductLinesJsonTest {
     @Test
     public void deserialiseOne() throws Exception {
 
-        SimpleModule module = new SimpleModule(Controller.ProductDeserializer.class.getName(), new Version(1, 0, 0, null, null, null));
-        module.addDeserializer(OrderLine.class, new Controller.ProductDeserializer());
+        SimpleModule module = new SimpleModule(ShopController.ProductDeserializer.class.getName(), new Version(1, 0, 0, null, null, null));
+        module.addDeserializer(OrderLine.class, new ShopController.ProductDeserializer());
 
         objectMapper.registerModule(module);
 
@@ -93,8 +93,8 @@ public class ProductLinesJsonTest {
     @Test
     public void deserialiseManyProductsAndTransformThemIntoOrderLines() throws Exception {
 
-        SimpleModule module = new SimpleModule(Controller.ProductDeserializer.class.getName(), new Version(1, 0, 0, null, null, null));
-        Controller.ProductDeserializer productDeserializer = new Controller.ProductDeserializer();
+        SimpleModule module = new SimpleModule(ShopController.ProductDeserializer.class.getName(), new Version(1, 0, 0, null, null, null));
+        ShopController.ProductDeserializer productDeserializer = new ShopController.ProductDeserializer();
         productDeserializer.setShop("Paris");
         module.addDeserializer(OrderLine.class, productDeserializer);
 

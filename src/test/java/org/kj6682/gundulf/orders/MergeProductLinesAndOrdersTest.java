@@ -71,8 +71,8 @@ public class MergeProductLinesAndOrdersTest {
     private Map<String, OrderLine> getProductLines(String shop, String producer)  {
 
 
-        SimpleModule module = new SimpleModule(Controller.ProductDeserializer.class.getName(), new Version(1, 0, 0, null, null, null));
-        Controller.ProductDeserializer productDeserializer = new Controller.ProductDeserializer();
+        SimpleModule module = new SimpleModule(ShopController.ProductDeserializer.class.getName(), new Version(1, 0, 0, null, null, null));
+        ShopController.ProductDeserializer productDeserializer = new ShopController.ProductDeserializer();
         productDeserializer.setShop(shop);
         module.addDeserializer(OrderLine.class, productDeserializer);
 
