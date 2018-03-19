@@ -19,9 +19,8 @@ class ProducerController {
 
 
     @Autowired
-    ApiBouncer apiBouncer;
-    @Autowired
     private OrderLineRepository repository;
+
     @Autowired
     private CustomerOrderRepository customerOrderRepository;
 

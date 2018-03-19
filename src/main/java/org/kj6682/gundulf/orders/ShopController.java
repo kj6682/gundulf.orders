@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import io.swagger.annotations.Api;
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -33,11 +34,9 @@ import java.util.stream.Collectors;
 @RequestMapping("/api")
 class ShopController {
 
-
-    @Autowired
-    ApiBouncer apiBouncer;
     @Autowired
     private OrderLineRepository repository;
+
     @Autowired
     private CustomerOrderRepository customerOrderRepository;
 
@@ -59,6 +58,14 @@ class ShopController {
 
     }
 
+    @GetMapping("/orders/shop/{shop}/{date}")
+    List<OrderLine> getShopOrders(@PathVariable String shop, @PathVariable String date) {
+
+        LocalDate deadline = LocalDate.parse(date);
+        return repository.findByShopAndDeadlineOrderByDeadlineAndProductAsc(shop, deadline);
+
+    }
+
     /**
      * ORDER-004 - the_shop_holder_list_the_products_to_place_orders
      * <p>
@@ -67,72 +74,17 @@ class ShopController {
      * so I can place an order on it
      * and possibly modify it
      */
-    @GetMapping("/orders/shop/{shop}/products/{producer}")
+    @GetMapping("/orders/shop/{shop}/{producer}/{date}")
     List<OrderLine> getProductsAndOrderLines(@PathVariable String shop,
-                                             @PathVariable String producer) {
+                                             @PathVariable String producer,
+                                             @PathVariable String date) {
 
 
-        Map<String, OrderLine> orderLineMap = mapProductLines(shop, producer);
+        LocalDate deadline = LocalDate.parse(date);
+        return repository.findByShopAndProducerAndDeadlineOrderByDeadlineAndProductAsc(shop, producer, deadline);
 
-        Map<String, OrderLine> shopOrders = mapOrderLines(shop, producer);
-
-        orderLineMap.putAll(shopOrders);
-
-        List<OrderLine> result = orderLineMap.values().stream().collect(Collectors.toList());
-
-        result.sort((l, r) -> {
-            if(l.getDeadline().equals(r.getDeadline())){
-                return l.getProduct().compareTo(r.getProduct());
-            }
-            return l.getDeadline().compareTo(r.getDeadline());
-        });
-        return result;
     }
 
-    private Map<String, OrderLine> mapOrderLines(@PathVariable String shop, @PathVariable String producer) {
-
-        LocalDate deadline = LocalDate.now().plusDays(1);
-
-        return repository.findByShopAndProducerAndDeadlineOrderByDeadlineAndProductAsc(shop, producer, deadline).stream()
-                .collect(Collectors
-                        .toMap(OrderLine::getDeadLineAndProduct, o -> o));
-    }
-
-    /**
-     * get the list of products and transform them into orderlines
-     *
-     * @param producer
-     * @return the list of order lines created with the product list
-     * @throws IOException
-     */
-    private Map<String, OrderLine> mapProductLines(String shop, String producer) {
-
-        SimpleModule module = new SimpleModule(ProductDeserializer.class.getName(), new Version(1, 0, 0, null, null, null));
-        ShopController.ProductDeserializer productDeserializer = new ShopController.ProductDeserializer();
-        productDeserializer.setShop(shop);
-        module.addDeserializer(OrderLine.class, productDeserializer);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        objectMapper.registerModule(module);
-
-        String jsonProds = apiBouncer.get(products + "/" + producer).getBody();
-
-        Map<String, OrderLine> result;
-        try{
-            List<OrderLine> productLines = objectMapper.readValue(jsonProds, new TypeReference<List<OrderLine>>() {});
-
-            result = productLines.stream()
-                .collect(Collectors
-                        .toMap(OrderLine::getDeadLineAndProduct, o -> o));
-
-        }catch (IOException e){
-            result = new HashMap<>();
-            e.printStackTrace();
-        }
-
-        return result;
-    }
 
 
     @PostMapping(value = "/orders/shop/{shop}")
@@ -162,51 +114,5 @@ class ShopController {
         //TODO check the shop
         repository.delete(id);
     }
-
-
-    static class ProductDeserializer extends StdDeserializer<OrderLine> {
-
-        String shop;
-
-        public ProductDeserializer() {
-            this(null);
-        }
-
-        public ProductDeserializer(Class<?> vc) {
-            super(vc);
-        }
-
-        void setShop(String shop) {
-            this.shop = shop;
-        }
-
-        @Override
-        public OrderLine deserialize(JsonParser parser, DeserializationContext deserializer) throws IOException {
-            OrderLine order = new OrderLine();
-            ObjectCodec codec = parser.getCodec();
-            JsonNode node = codec.readTree(parser);
-
-            // try catch block
-            order.setId(0L);
-
-            JsonNode jProduct = node.get("name");
-            String product = jProduct.asText();
-
-            JsonNode jPieces = node.get("pieces");
-            Integer pieces = jPieces.asInt();
-            order.setProduct(product + "-" + pieces);
-
-            JsonNode jProducer = node.get("producer");
-            String producer = jProducer.asText();
-            order.setProducer(producer);
-
-            order.setShop(shop);
-            order.setQuantity(0);
-            order.setStatus("NEW");
-            order.setCreated(LocalDate.now());
-            order.setDeadline(LocalDate.now().plusDays(1L));
-            return order;
-        }
-    }//:)
 
 }//:)
