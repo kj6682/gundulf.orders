@@ -20,7 +20,7 @@ public interface OrderLineRepository extends CrudRepository<OrderLine, Long> {
 
     @Query(value = "select v " +
             "from OrderLine v " +
-            "where v.shop =?1 and and v.deadline = ?2 " +
+            "where v.shop =?1 and v.deadline = ?2 " +
             "order by (v.deadline, v.product) asc")
     List<OrderLine> findByShopAndDeadlineOrderByDeadlineAndProductAsc(@Param("shop") String shop,
                                                                       @Param("deadline") LocalDate deadline);

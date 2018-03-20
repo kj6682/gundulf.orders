@@ -29,10 +29,10 @@ import java.util.stream.Collectors;
 /**
  * Created by luigi on 02/12/2017.
  */
-@Api(value = "shop-orders", description = "Shop - Orders API")
+@Api(value = "orderlines", description = "OrderLines API")
 @RestController
-@RequestMapping("/api")
-class ShopController {
+@RequestMapping("/api/orderlines")
+class OrderLineController {
 
     @Autowired
     private OrderLineRepository repository;
@@ -40,42 +40,37 @@ class ShopController {
     @Autowired
     private CustomerOrderRepository customerOrderRepository;
 
-    @Value("${API_PRODUCTS}")
-    private String products;
+    @GetMapping()
+    List<OrderLine> getAllOrderlines() {
 
-    /**
-     * ORDER-003 - the_shop_holder_lists_the_orders
-     * <p>
-     * as a shop holder
-     * I want to list all my orders
-     * so that I can track what I asked
-     * and possibly validate returns
-     */
-    @GetMapping("/orders/shop/{shop}")
-    List<OrderLine> getShopOrders(@PathVariable String shop) {
+        return repository.findAll();
+
+    }
+
+    @GetMapping("/producer/{producer}")
+    List<OrderLine> getProducerOrderLines(@PathVariable String producer) {
+
+        return repository.findByProducerOrderByDeadlineAndProductAsc(producer);
+
+    }
+
+    @GetMapping("/shop/{shop}")
+    List<OrderLine> getShopOrderLines(@PathVariable String shop) {
 
         return repository.findByShopOrderByDeadlineAndProductAsc(shop);
 
     }
 
-    @GetMapping("/orders/shop/{shop}/{date}")
-    List<OrderLine> getShopOrders(@PathVariable String shop, @PathVariable String date) {
+    @GetMapping("/shop/{shop}/{date}")
+    List<OrderLine> getShopOrderLinesByDate(@PathVariable String shop, @PathVariable String date) {
 
         LocalDate deadline = LocalDate.parse(date);
         return repository.findByShopAndDeadlineOrderByDeadlineAndProductAsc(shop, deadline);
 
     }
 
-    /**
-     * ORDER-004 - the_shop_holder_list_the_products_to_place_orders
-     * <p>
-     * as a shop holder
-     * I want to list all the products of a producer
-     * so I can place an order on it
-     * and possibly modify it
-     */
-    @GetMapping("/orders/shop/{shop}/{producer}/{date}")
-    List<OrderLine> getProductsAndOrderLines(@PathVariable String shop,
+    @GetMapping("/shop/{shop}/{producer}/{date}")
+    List<OrderLine> getShopOrderLinesByProducerAndDate(@PathVariable String shop,
                                              @PathVariable String producer,
                                              @PathVariable String date) {
 
@@ -87,7 +82,7 @@ class ShopController {
 
 
 
-    @PostMapping(value = "/orders/shop/{shop}")
+    @PostMapping(value = "/shop/{shop}")
     ResponseEntity<?> createOrderLine(@PathVariable String shop,
                                                 @RequestBody OrderLine order) {
         Assert.notNull(order, "Order can not be empty");
@@ -96,7 +91,7 @@ class ShopController {
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
-    @PutMapping(value = "/orders/shop/{shop}/{id}")
+    @PutMapping(value = "/shop/{shop}/{id}")
     ResponseEntity<?> updateOrderLine(@PathVariable String shop,
                                                @PathVariable Long id,
                                                @RequestBody OrderLine order) {
@@ -108,7 +103,7 @@ class ShopController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "/orders/shop/{shop}/{id}")
+    @DeleteMapping(value = "/shop/{shop}/{id}")
     void deleteOrderLine(@PathVariable String shop,
                                @PathVariable(required = true) Long id) {
         //TODO check the shop

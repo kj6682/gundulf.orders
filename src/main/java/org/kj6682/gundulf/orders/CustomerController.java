@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 /**
  * Created by luigi on 02/12/2017.
  */
-@Api(value = "customer-orders", description = "Customer - Orders API")
+@Api(value = "orders", description = "Orders API")
 @RestController
 @RequestMapping("/api")
 class CustomerController {
