@@ -3,6 +3,7 @@ package org.kj6682.gundulf.orders;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.kj6682.gundulf.orders.orderline.OrderLine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;

@@ -1,5 +1,6 @@
-package org.kj6682.gundulf.orders;
+package org.kj6682.gundulf.orders.orderline;
 
+import org.kj6682.gundulf.orders.todo.ToDo;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -42,7 +43,7 @@ public interface OrderLineRepository extends CrudRepository<OrderLine, Long> {
 
 
     @Query(value = "select " +
-            "new org.kj6682.gundulf.orders.ToDo(v.deadline, v.product, SUM(v.quantity)) " +
+            "new org.kj6682.gundulf.orders.todo.ToDo(v.deadline, v.product, SUM(v.quantity)) " +
             "from OrderLine v " +
             "where v.producer = ?1 " +
             "group by (v.deadline, v.product) " +

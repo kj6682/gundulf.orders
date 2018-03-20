@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import org.kj6682.commons.LocalDateDeserializer;
 import org.kj6682.commons.LocalDateSerializer;
+import org.kj6682.gundulf.orders.orderline.OrderLine;
 
 import javax.persistence.*;
 import java.time.LocalDate;

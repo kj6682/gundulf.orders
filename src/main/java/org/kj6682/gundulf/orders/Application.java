@@ -1,6 +1,8 @@
 package org.kj6682.gundulf.orders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.kj6682.gundulf.orders.orderline.OrderLine;
+import org.kj6682.gundulf.orders.orderline.OrderLineRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

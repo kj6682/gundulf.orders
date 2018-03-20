@@ -1,8 +1,9 @@
-package org.kj6682.gundulf.orders;
+package org.kj6682.gundulf.orders.todo;
 
 import io.swagger.annotations.Api;
+import org.kj6682.gundulf.orders.CustomerOrderRepository;
+import org.kj6682.gundulf.orders.orderline.OrderLineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -15,7 +16,7 @@ import java.util.List;
 @Api(value = "todos", description = "Producer Todos API")
 @RestController
 @RequestMapping("/api/todos")
-class TodoController {
+public class TodoController {
 
 
     @Autowired

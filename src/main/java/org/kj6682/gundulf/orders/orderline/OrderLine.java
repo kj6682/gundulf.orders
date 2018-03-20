@@ -1,4 +1,4 @@
-package org.kj6682.gundulf.orders;
+package org.kj6682.gundulf.orders.orderline;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -15,7 +15,7 @@ import java.time.format.DateTimeFormatter;
 
 @Data
 @Entity
-class OrderLine {
+public class OrderLine {
 
 
     @Id

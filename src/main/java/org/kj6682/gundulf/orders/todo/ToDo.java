@@ -1,4 +1,4 @@
-package org.kj6682.gundulf.orders;
+package org.kj6682.gundulf.orders.todo;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -7,7 +7,7 @@ import org.kj6682.commons.LocalDateSerializer;
 
 import java.time.LocalDate;
 
-class ToDo {
+public class ToDo {
 
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonDeserialize(using = LocalDateDeserializer.class)
