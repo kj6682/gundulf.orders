@@ -1,7 +1,7 @@
 package org.kj6682.gundulf.orders.orderline;
 
 import io.swagger.annotations.Api;
-import org.kj6682.gundulf.orders.CustomerOrderRepository;
+import org.kj6682.gundulf.orders.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +23,7 @@ public class OrderLineController {
     private OrderLineRepository repository;
 
     @Autowired
-    private CustomerOrderRepository customerOrderRepository;
+    private OrderRepository orderRepository;
 
     @GetMapping()
     List<OrderLine> getAllOrderlines() {

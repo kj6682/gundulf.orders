@@ -1,4 +1,4 @@
-package org.kj6682.gundulf.orders;
+package org.kj6682.gundulf.orderline;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

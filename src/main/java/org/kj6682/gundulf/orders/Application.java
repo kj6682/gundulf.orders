@@ -23,7 +23,7 @@ public class Application {
 		SpringApplication.run(Application.class, args);
 	}
 
-	@Profile({"ddl-create", "h2"})
+	/*@Profile({"ddl-create", "h2"})
 	@Bean
 	CommandLineRunner initItems(OrderLineRepository orderLineRepository) throws IOException {
 		org.springframework.core.io.Resource resource = new ClassPathResource("orderlines.json");
@@ -44,4 +44,5 @@ public class Application {
 		};
 
 	}
+	*/
 }

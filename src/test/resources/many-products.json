@@ -4,7 +4,7 @@
     "name": "baba",
     "category": "blue",
     "pieces": 1,
-    "producer": "four",
+    "category": "four",
     "created": "2017-07-13",
     "status": "VALID"
   },
@@ -13,7 +13,7 @@
     "name": "baba",
     "category": "blue",
     "pieces": 2,
-    "producer": "four",
+    "category": "four",
     "created": "2017-07-13",
     "status": "VALID"
   },
@@ -22,7 +22,7 @@
     "name": "millefeuilles",
     "category": "blue",
     "pieces": 4,
-    "producer": "four",
+    "category": "four",
     "created": "2017-07-13",
     "status": "VALID"
   },
@@ -31,7 +31,7 @@
     "name": "millefeuilles",
     "category": "blue",
     "pieces": 6,
-    "producer": "four",
+    "category": "four",
     "created": "2017-07-13",
     "status": "VALID"
   }

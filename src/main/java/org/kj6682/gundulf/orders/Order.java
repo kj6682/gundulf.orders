@@ -14,7 +14,7 @@ import java.util.Set;
 
 @Data
 @Entity
-public class CustomerOrder {
+public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -34,7 +34,7 @@ public class CustomerOrder {
 
     @OneToMany(cascade = CascadeType.ALL,
             orphanRemoval = true)
-    private Set<OrderLine> orders = new HashSet<>();
+    private Set<Product> orders = new HashSet<>();
 
 
 }

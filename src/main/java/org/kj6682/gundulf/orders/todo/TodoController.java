@@ -1,7 +1,7 @@
 package org.kj6682.gundulf.orders.todo;
 
 import io.swagger.annotations.Api;
-import org.kj6682.gundulf.orders.CustomerOrderRepository;
+import org.kj6682.gundulf.orders.OrderRepository;
 import org.kj6682.gundulf.orders.orderline.OrderLineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +23,7 @@ public class TodoController {
     private OrderLineRepository repository;
 
     @Autowired
-    private CustomerOrderRepository customerOrderRepository;
+    private OrderRepository orderRepository;
 
 
     @GetMapping("/producer/{producer}")

@@ -3,8 +3,6 @@ package org.kj6682.gundulf.orders;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.kj6682.gundulf.orders.orderline.OrderLine;
-import org.kj6682.gundulf.orders.orderline.OrderLineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
@@ -26,40 +24,40 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @RunWith(SpringRunner.class)
 @JsonTest
-public class OrderLineJsonTest {
+public class ProductJsonTest {
 
     @Autowired
-    private JacksonTester<OrderLine> json;
+    private JacksonTester<Product> json;
 
     @MockBean
-    private OrderLineRepository repository;
+    private ProductRepository productRepository;
 
-    OrderLine simpleOrder;
+    Product cake;
 
     File jsonFile;
 
     @Before
     public void setup() throws Exception{
-        simpleOrder = new OrderLine("paris",
-                                      "four",
-                                      "millefeuilles-6",
-                                      10,
-                                      LocalDate.of(2017,12,3),
-                                      LocalDate.of(2017,12,4) );
-        jsonFile = ResourceUtils.getFile("classpath:one-order.json");
+        cake = new Product("product",
+                "category",1,1);
+        jsonFile = ResourceUtils.getFile("classpath:one_product.json");
 
     }
     @Test
     public void serialise() throws Exception{
-        System.out.println(this.json.write(simpleOrder));
-        assertThat(this.json.write(simpleOrder)).isEqualTo(jsonFile);
+
+        assertThat(this.json.write(cake)).isEqualTo(jsonFile);
+        assertThat(this.json.write(cake)).hasJsonPathStringValue("@.name");
+        assertThat(this.json.write(cake)).hasJsonPathStringValue("@.category");
+        assertThat(this.json.write(cake)).hasJsonPathValue("@.quantity");
+        assertThat(this.json.write(cake)).hasJsonPathValue("@.size");
     }
     @Test
     public void deserialise() throws Exception {
 
         String jsonObject = new String(Files.readAllBytes(jsonFile.toPath()));
-        OrderLine newCake = this.json.parse(jsonObject).getObject();
-        assertThat(newCake.equals(simpleOrder));
+        Product newCake = this.json.parse(jsonObject).getObject();
+        assertThat(newCake.equals(cake));
 
     }
 

@@ -1,9 +1,10 @@
-package org.kj6682.gundulf.orders;
+package org.kj6682.gundulf.orderline;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kj6682.gundulf.orders.orderline.OrderLine;
+import org.kj6682.gundulf.orders.orderline.OrderLineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
@@ -25,58 +26,41 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @RunWith(SpringRunner.class)
 @JsonTest
-public class CustomerOrderJsonTest {
+public class OrderLineJsonTest {
 
     @Autowired
-    private JacksonTester<CustomerOrder> json;
+    private JacksonTester<OrderLine> json;
 
     @MockBean
-    private CustomerOrderRepository repository;
+    private OrderLineRepository repository;
 
-    CustomerOrder customerOrder;
-
+    OrderLine simpleOrder;
 
     File jsonFile;
 
-
     @Before
     public void setup() throws Exception{
-        OrderLine simpleOrder = new OrderLine("paris",
+        simpleOrder = new OrderLine("paris",
                                       "four",
                                       "millefeuilles-6",
                                       10,
                                       LocalDate.of(2017,12,3),
                                       LocalDate.of(2017,12,4) );
-        OrderLine simpleOrder2 = new OrderLine("luxembourg",
-                "tartes",
-                "tiramisu-2",
-                10,
-                LocalDate.of(2017,12,3),
-                LocalDate.of(2017,12,4) );
-        customerOrder = new CustomerOrder();
-        customerOrder.setCustomer("ricky rat");
-        customerOrder.setAddress("23, piazza quattro formaggi, ratcity");
-        customerOrder.setCreated(LocalDate.of(2018,01,31));
-        customerOrder.setDeadline(LocalDate.of(2018,02,28));
-        customerOrder.getOrders().add(simpleOrder);
-        customerOrder.getOrders().add(simpleOrder2);
-
-        jsonFile = ResourceUtils.getFile("classpath:one-customer-order.json");
+        jsonFile = ResourceUtils.getFile("classpath:one-order.json");
 
     }
     @Test
     public void serialise() throws Exception{
-        System.out.println(this.json.write(customerOrder));
-        assertThat(this.json.write(customerOrder)).isEqualTo(jsonFile);
+        System.out.println(this.json.write(simpleOrder));
+        assertThat(this.json.write(simpleOrder)).isEqualTo(jsonFile);
     }
-
     @Test
     public void deserialise() throws Exception {
 
         String jsonObject = new String(Files.readAllBytes(jsonFile.toPath()));
-        CustomerOrder newCake = this.json.parse(jsonObject).getObject();
-        assertThat(newCake.equals(customerOrder));
-        assertThat(newCake.getOrders().size() == 1);
-        assertThat(newCake.getOrders().iterator().next().getProducer() == "four");
+        OrderLine newCake = this.json.parse(jsonObject).getObject();
+        assertThat(newCake.equals(simpleOrder));
+
     }
+
 }
