@@ -12,13 +12,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
 import java.util.HashSet;
-import java.util.Set;
 
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
 @ActiveProfiles(profiles = {"h2"})
-public class OrderEntityTest {
+public class ShopOrderEntityTest {
 
     @Autowired
     private TestEntityManager entityManager;
@@ -31,7 +30,7 @@ public class OrderEntityTest {
     public void customerNotNull() throws Exception{
         this.thrown.expect(IllegalArgumentException.class);
         this.thrown.expectMessage("an order needs a customer");
-        new Order(null,
+        new ShopOrder(null,
                 "address",
                 "shop",
                 LocalDate.now(),
@@ -43,7 +42,7 @@ public class OrderEntityTest {
     public void addressNotNull() throws Exception{
         this.thrown.expect(IllegalArgumentException.class);
         this.thrown.expectMessage("an order needs an address for delivery");
-        new Order("customer",
+        new ShopOrder("customer",
                 null,
                 "shop",
                 LocalDate.now(),
@@ -55,7 +54,7 @@ public class OrderEntityTest {
     public void shopNotNull() throws Exception{
         this.thrown.expect(IllegalArgumentException.class);
         this.thrown.expectMessage("an order must be attached to a shop");
-        new Order("customer",
+        new ShopOrder("customer",
                 "address",
                 null,
                 LocalDate.now(),
@@ -67,7 +66,7 @@ public class OrderEntityTest {
     public void createDateNotNull() throws Exception{
         this.thrown.expect(IllegalArgumentException.class);
         this.thrown.expectMessage("an order must fixed creation date");
-        new Order("customer",
+        new ShopOrder("customer",
                 "address",
                 "shop",
                 null,
@@ -79,7 +78,7 @@ public class OrderEntityTest {
     public void deadlineNotNull() throws Exception{
         this.thrown.expect(IllegalArgumentException.class);
         this.thrown.expectMessage("an order must have a fixed deadline");
-        new Order("customer",
+        new ShopOrder("customer",
                 "address",
                 "shop",
                 LocalDate.now(),
@@ -91,7 +90,7 @@ public class OrderEntityTest {
     public void productsNotNull() throws Exception{
         this.thrown.expect(IllegalArgumentException.class);
         this.thrown.expectMessage("an order must have a collection of products");
-        new Order("customer",
+        new ShopOrder("customer",
                 "address",
                 "shop",
                 LocalDate.now(),

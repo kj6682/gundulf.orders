@@ -1,10 +1,11 @@
-package org.kj6682.gundulf.orderline;
+package org.kj6682.gundulf.todo;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.kj6682.gundulf.orders.orderline.OrderLine;
-import org.kj6682.gundulf.orders.orderline.OrderLineRepository;
+import org.kj6682.gundulf.orders.Product;
+import org.kj6682.gundulf.orders.ShopOrder;
+import org.kj6682.gundulf.orders.ShopOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
@@ -15,6 +16,8 @@ import org.springframework.util.ResourceUtils;
 import java.io.File;
 import java.nio.file.Files;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -26,40 +29,42 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @RunWith(SpringRunner.class)
 @JsonTest
-public class OrderLineJsonTest {
+public class ToDoJsonTest {
 
     @Autowired
-    private JacksonTester<OrderLine> json;
+    private JacksonTester<ToDo> json;
 
     @MockBean
-    private OrderLineRepository repository;
+    private ShopOrderRepository shopOrderRepository;
 
-    OrderLine simpleOrder;
+    ToDo toDo;
 
     File jsonFile;
 
     @Before
     public void setup() throws Exception{
-        simpleOrder = new OrderLine("paris",
-                                      "four",
-                                      "millefeuilles-6",
-                                      10,
-                                      LocalDate.of(2017,12,3),
-                                      LocalDate.of(2017,12,4) );
-        jsonFile = ResourceUtils.getFile("classpath:one-order.json");
+
+        toDo = new ToDo("product", LocalDate.of(2018,07,16), 1);
+
+        jsonFile = ResourceUtils.getFile("classpath:one_todo.json");
 
     }
+
     @Test
     public void serialise() throws Exception{
-        System.out.println(this.json.write(simpleOrder));
-        assertThat(this.json.write(simpleOrder)).isEqualTo(jsonFile);
+
+        System.out.println(this.json.write(toDo));
+        assertThat(this.json.write(toDo)).isEqualTo(jsonFile);
+        assertThat(this.json.write(toDo)).hasJsonPathStringValue("@.product");
+        assertThat(this.json.write(toDo)).hasJsonPathStringValue("@.deadline");
+
     }
     @Test
     public void deserialise() throws Exception {
 
         String jsonObject = new String(Files.readAllBytes(jsonFile.toPath()));
-        OrderLine newCake = this.json.parse(jsonObject).getObject();
-        assertThat(newCake.equals(simpleOrder));
+        ToDo newToDo = this.json.parse(jsonObject).getObject();
+        assertThat(newToDo.equals(toDo));
 
     }
 

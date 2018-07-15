@@ -26,42 +26,42 @@ public class ProductEntityTest {
     @Test
     public void nameNotNull() throws Exception{
         this.thrown.expect(IllegalArgumentException.class);
-        this.thrown.expectMessage("a product in an order needs a name");
+        this.thrown.expectMessage("a product in a shopOrder needs a name");
         new Product(null, "category", 0, 1);
     }
 
     @Test
     public void categoryNotNull() throws Exception{
         this.thrown.expect(IllegalArgumentException.class);
-        this.thrown.expectMessage("a product in an order needs a category");
+        this.thrown.expectMessage("a product in a shopOrder needs a category");
         new Product("product", null, 0, 1);
     }
 
     @Test
     public void quantityNotNull() throws Exception{
         this.thrown.expect(IllegalArgumentException.class);
-        this.thrown.expectMessage("a product in an order needs a quantity");
+        this.thrown.expectMessage("a product in a shopOrder needs a quantity");
         new Product("name", "category", null, 1);
     }
 
     @Test
     public void quantityNotNegative() throws Exception{
         this.thrown.expect(IllegalArgumentException.class);
-        this.thrown.expectMessage("a product in an order needs a positive quantity");
+        this.thrown.expectMessage("a product in a shopOrder needs a positive quantity");
         new Product("name", "category", -1, 1);
     }
 
     @Test
     public void sizeNotnull() throws Exception{
         this.thrown.expect(IllegalArgumentException.class);
-        this.thrown.expectMessage("a product in an order needs a size");
+        this.thrown.expectMessage("a product in a shopOrder needs a size");
         new Product("name", "category", 1, null);
     }
 
     @Test
     public void sizeNotNegative() throws Exception{
         this.thrown.expect(IllegalArgumentException.class);
-        this.thrown.expectMessage("a product in an order needs a positive size");
+        this.thrown.expectMessage("a product in a shopOrder needs a positive size");
         new Product("name", "category", 1, -1);
     }
 

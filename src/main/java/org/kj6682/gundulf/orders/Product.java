@@ -25,12 +25,12 @@ public class Product {
     private Integer size;
 
     public Product(String name, String category, Integer quantity, Integer size) {
-        hasLength(name, "a product in an order needs a name");
-        hasLength(category, "a product in an order needs a category");
-        notNull(quantity, "a product in an order needs a quantity");
-        isTrue(quantity.intValue() >= 0, "a product in an order needs a positive quantity");
-        notNull(size, "a product in an order needs a size");
-        isTrue(size.intValue() >= 0, "a product in an order needs a positive size");
+        hasLength(name, "a product in a shopOrder needs a name");
+        hasLength(category, "a product in a shopOrder needs a category");
+        notNull(quantity, "a product in a shopOrder needs a quantity");
+        isTrue(quantity.intValue() >= 0, "a product in a shopOrder needs a positive quantity");
+        notNull(size, "a product in a shopOrder needs a size");
+        isTrue(size.intValue() >= 0, "a product in a shopOrder needs a positive size");
 
         this.name = name;
         this.category = category;

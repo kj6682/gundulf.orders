@@ -1,20 +1,7 @@
 package org.kj6682.gundulf;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.kj6682.gundulf.orders.orderline.OrderLine;
-import org.kj6682.gundulf.orders.orderline.OrderLineRepository;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Profile;
-import org.springframework.core.io.ClassPathResource;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
 @SpringBootApplication
 public class Application {

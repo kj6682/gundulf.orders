@@ -26,17 +26,17 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @RunWith(SpringRunner.class)
 @JsonTest
-public class OrderJsonTest {
+public class ShopOrderJsonTest {
 
     @Autowired
-    private JacksonTester<Order> json;
+    private JacksonTester<ShopOrder> json;
 
     @MockBean
-    private OrderRepository orderRepository;
+    private ShopOrderRepository shopOrderRepository;
 
     Product cake1, cake4;
 
-    Order order;
+    ShopOrder shopOrder;
 
     File jsonFile;
 
@@ -51,7 +51,7 @@ public class OrderJsonTest {
         products.add(cake1);
         products.add(cake4);
 
-        order = new Order("customer",
+        shopOrder = new ShopOrder("customer",
                 "address",
                 "shop",
                 LocalDate.of(2018, 07, 15),
@@ -62,21 +62,22 @@ public class OrderJsonTest {
         jsonFile = ResourceUtils.getFile("classpath:one_order.json");
 
     }
+
     @Test
     public void serialise() throws Exception{
 
-        assertThat(this.json.write(order)).isEqualTo(jsonFile);
-        assertThat(this.json.write(order)).hasJsonPathStringValue("@.customer");
-        assertThat(this.json.write(order)).hasJsonPathStringValue("@.address");
-        assertThat(this.json.write(order)).hasJsonPathValue("@.shop");
-        assertThat(this.json.write(order)).hasJsonPathValue("@.products");
+        assertThat(this.json.write(shopOrder)).isEqualTo(jsonFile);
+        assertThat(this.json.write(shopOrder)).hasJsonPathStringValue("@.customer");
+        assertThat(this.json.write(shopOrder)).hasJsonPathStringValue("@.address");
+        assertThat(this.json.write(shopOrder)).hasJsonPathValue("@.shop");
+        assertThat(this.json.write(shopOrder)).hasJsonPathValue("@.products");
     }
     @Test
     public void deserialise() throws Exception {
 
         String jsonObject = new String(Files.readAllBytes(jsonFile.toPath()));
-        Order newOrder = this.json.parse(jsonObject).getObject();
-        assertThat(newOrder.equals(order));
+        ShopOrder newShopOrder = this.json.parse(jsonObject).getObject();
+        assertThat(newShopOrder.equals(shopOrder));
 
     }
 

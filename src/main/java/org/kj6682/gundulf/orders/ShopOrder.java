@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import org.kj6682.commons.LocalDateDeserializer;
 import org.kj6682.commons.LocalDateSerializer;
-import org.kj6682.gundulf.orders.orderline.OrderLine;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -18,7 +17,7 @@ import static org.springframework.util.Assert.notNull;
 
 @Data
 @Entity
-public class Order {
+public class ShopOrder {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -41,14 +40,14 @@ public class Order {
                orphanRemoval = true)
     private Set<Product> products = new HashSet<>();
 
-    protected  Order(){};
+    protected ShopOrder(){};
 
-    public Order(String customer,
-                 String address,
-                 String shop,
-                 LocalDate created,
-                 LocalDate deadline,
-                 Set<Product> products) {
+    public ShopOrder(String customer,
+                     String address,
+                     String shop,
+                     LocalDate created,
+                     LocalDate deadline,
+                     Set<Product> products) {
         notNull(customer, "an order needs a customer");
         notNull(address, "an order needs an address for delivery");
         notNull(shop, "an order must be attached to a shop");
