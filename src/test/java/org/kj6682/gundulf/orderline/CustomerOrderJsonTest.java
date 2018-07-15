@@ -63,7 +63,7 @@ public class CustomerOrderJsonTest {
         customerOrder.getOrders().add(simpleOrder);
         customerOrder.getOrders().add(simpleOrder2);
 
-        jsonFile = ResourceUtils.getFile("classpath:one-customer-order.json");
+        jsonFile = ResourceUtils.getFile("classpath:one_order.json");
 
     }
     @Test

@@ -1,4 +1,4 @@
-package org.kj6682.gundulf.orders;
+package org.kj6682.gundulf;
 
 import org.junit.Ignore;
 import org.junit.Test;

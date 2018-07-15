@@ -1,4 +1,4 @@
-package org.kj6682.gundulf.orders;
+package org.kj6682.gundulf;
 
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.core.type.TypeReference;

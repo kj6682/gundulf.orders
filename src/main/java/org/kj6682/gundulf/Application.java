@@ -1,4 +1,4 @@
-package org.kj6682.gundulf.orders;
+package org.kj6682.gundulf;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.kj6682.gundulf.orders.orderline.OrderLine;
