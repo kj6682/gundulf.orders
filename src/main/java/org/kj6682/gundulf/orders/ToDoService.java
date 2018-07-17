@@ -2,6 +2,7 @@ package org.kj6682.gundulf.orders;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import lombok.Data;
 import org.kj6682.commons.LocalDateDeserializer;
 import org.kj6682.commons.LocalDateSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +18,11 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.xml.ws.Response;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.Collections;
+
 
 @Service
 public class ToDoService {
@@ -52,36 +55,39 @@ public class ToDoService {
     }
 
 
-    URI create(String product,
-                  LocalDate deadline,
-                  Integer quantity) {
-
-        System.out.println(product);
-        System.out.println(deadline);
-        System.out.println(quantity);
+    ResponseEntity<ToDo> create(String product,
+                    LocalDate deadline,
+                    Integer quantity) {
 
         HttpEntity<ToDo> request = new HttpEntity<>(new ToDo(product, deadline, quantity));
-        URI location = restTemplate
-                .postForLocation(todos + "/", request);
-        //Assert.notNull(location, "not null");
 
-        return  location;
+        ResponseEntity<ToDo> response = restTemplate
+                .exchange(todos + "/", HttpMethod.POST, request, ToDo.class);
 
+        Assert.isTrue(response.getStatusCode().equals(HttpStatus.CREATED), "HttpStatus must be CREATED");
+
+        ToDo todo = response.getBody();
+
+        Assert.notNull(todo, "todo is not null");
+        Assert.isTrue(todo.getProduct().equals(product), "the returned product must be the same");
+        Assert.isTrue(todo.getDeadline().isEqual(deadline), "the returned deadline must be the same");
+
+        return response;
 
     }
 
+    @Data
+    static class ToDo {
 
-    class ToDo {
-
-        @JsonSerialize
         String product;
 
         @JsonSerialize(using = LocalDateSerializer.class)
         @JsonDeserialize(using = LocalDateDeserializer.class)
         LocalDate deadline;
 
-        @JsonSerialize
         Integer quantity;
+
+        ToDo(){}
 
         ToDo(String product, LocalDate deadline, Integer quantity) {
             this.deadline = deadline;
@@ -89,5 +95,14 @@ public class ToDoService {
             this.quantity = quantity.intValue();
         }
 
+        @Override
+        public String toString() {
+            final StringBuilder sb = new StringBuilder("ToDo{");
+            sb.append("product='").append(product).append('\'');
+            sb.append(", deadline=").append(deadline);
+            sb.append(", quantity=").append(quantity);
+            sb.append('}');
+            return sb.toString();
+        }
     }//:)
 }

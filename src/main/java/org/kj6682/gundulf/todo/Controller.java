@@ -43,15 +43,14 @@ public class Controller {
 
     @PostMapping(value = "/")
     ResponseEntity<?> create(@RequestBody ToDo todo) {
-        System.out.println("in todo world");
-        System.out.println(todo);
 
         ToDo t = repository.findOne(new ToDoKey(todo.getProduct(), todo.getDeadline()));
         if(t != null) {
             todo.setQuantity(t.getQuantity() + todo.getQuantity());
         }
         ToDo result = repository.save(todo);
-        return new ResponseEntity<>(result, HttpStatus.CREATED);
+
+        return new ResponseEntity<ToDo>(result, HttpStatus.CREATED);
 
     }
 

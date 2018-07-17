@@ -10,6 +10,7 @@ import java.time.LocalDate;
 
 public class ToDoKey implements Serializable {
 
+    @JsonSerialize
     String product;
 
     @JsonSerialize(using = LocalDateSerializer.class)

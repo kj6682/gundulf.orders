@@ -50,4 +50,20 @@ class Controller {
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
+
+    @DeleteMapping(value = "/{id}")
+    void deleteOrder(@PathVariable(required = true) Long id) {
+        System.out.println("bloody delete " + id);
+        Assert.notNull(id, "ShopOrder id can not be null");
+
+        ShopOrder shopOrder = shopOrderRepository.findOne(id);
+        Assert.notNull(shopOrder, "The ShopOrder you want to delete must not be null");
+
+        shopOrder.getProducts().forEach(p ->
+                toDoService.create(p.getName(), shopOrder.getDeadline(), p.getQuantity() * p.getSize() * -1 ));
+        ;
+
+        shopOrderRepository.delete(id);
+    }
+
 }//:)

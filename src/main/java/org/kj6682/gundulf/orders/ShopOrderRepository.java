@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface ShopOrderRepository extends CrudRepository<ShopOrder, Long> {
     List<ShopOrder> findAll();
+    
+    void delete(Long id);
 }

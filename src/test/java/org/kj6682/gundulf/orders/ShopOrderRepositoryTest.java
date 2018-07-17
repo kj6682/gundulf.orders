@@ -77,4 +77,23 @@ public class ShopOrderRepositoryTest {
 
     }
 
+    @Test
+    public void deleteOrder_OK(){
+        //given
+        //shopOrder
+        shopOrderRepository.save(shopOrder);
+        Integer numberOfOrdersBefore = productRepository.findAll().size();
+
+        //when
+        shopOrderRepository.delete(shopOrder.getId());
+
+        //then
+        List<ShopOrder> sos = shopOrderRepository.findAll();
+        assertThat(sos.size() == 0);
+
+        Integer numberOfOrdersAfter = productRepository.findAll().size();
+        assertThat(numberOfOrdersAfter == (numberOfOrdersBefore) );
+
+    }
+
 }
