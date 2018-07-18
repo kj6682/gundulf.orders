@@ -27,19 +27,18 @@ public class ToDoRepositoryTest {
     @Autowired
     private ToDoRepository toDoRepository;
 
-    ToDo toDo;
+    ToDo toDo, toDoToday;
 
     @Before
     public void setup() throws Exception{
         toDo = new ToDo("product", 1, LocalDate.of(2018,07,16), 1);
+        toDoToday = new ToDo("product", 1, LocalDate.now(), 1);
     }
 
     // write test cases here
     @Test
     public void createOrder_OK() {
-        // given
-        // shopOrder
-
+        // given toDo
 
         Integer numberOfToDosBefore = toDoRepository.findAll().size();
 
@@ -53,6 +52,23 @@ public class ToDoRepositoryTest {
         Integer numberOfToDosAfter = toDoRepository.findAll().size();
         assertThat(numberOfToDosAfter == (numberOfToDosBefore + 2) );
 
+    }
+
+    @Test
+    public void findByDate(){
+        //give toDoToday
+
+        Integer numberOfToDosBefore = toDoRepository.findAll().size();
+
+        // when
+        toDoRepository.save(toDoToday);
+
+        // then
+        List<ToDo> sos = toDoRepository.findByDeadline(LocalDate.now());
+        assertThat(sos.size() != 0);
+
+        Integer numberOfToDosAfter = toDoRepository.findAll().size();
+        assertThat(numberOfToDosAfter == (numberOfToDosBefore + 1) );
     }
 
 }

@@ -4,12 +4,14 @@ import io.swagger.annotations.Api;
 import org.kj6682.gundulf.orders.ShopOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.springframework.util.Assert.isTrue;
@@ -33,9 +35,18 @@ public class Controller {
 
 
     @GetMapping("/")
-    List<ToDo> getProducerTodos() {
+    List<ToDo> getAllTodos() {
 
         List<ToDo> result = repository.findAll();
+
+        return result;
+
+    }
+
+    @GetMapping("/byDate/{date}")
+    List<ToDo> getTodosByDate(@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+
+        List<ToDo> result = repository.findByDeadline(date);
 
         return result;
 
@@ -46,7 +57,7 @@ public class Controller {
 
         ToDo t = repository.findOne(new ToDoKey(todo.getProduct(), todo.getSize(), todo.getDeadline()));
         if(t != null) {
-            todo.setQuantity(t.getQuantity() + todo.getQuantity());
+            todo = new ToDo(todo.getProduct(), todo.getSize(), todo.getDeadline(), t.getQuantity() + todo.getQuantity());
         }
         ToDo result = repository.save(todo);
 
