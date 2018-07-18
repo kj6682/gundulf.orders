@@ -56,10 +56,11 @@ public class ToDoService {
 
 
     ResponseEntity<ToDo> create(String product,
+                                Integer size,
                     LocalDate deadline,
                     Integer quantity) {
 
-        HttpEntity<ToDo> request = new HttpEntity<>(new ToDo(product, deadline, quantity));
+        HttpEntity<ToDo> request = new HttpEntity<>(new ToDo(product, size, deadline, quantity));
 
         ResponseEntity<ToDo> response = restTemplate
                 .exchange(todos + "/", HttpMethod.POST, request, ToDo.class);
@@ -81,6 +82,8 @@ public class ToDoService {
 
         String product;
 
+        int size;
+
         @JsonSerialize(using = LocalDateSerializer.class)
         @JsonDeserialize(using = LocalDateDeserializer.class)
         LocalDate deadline;
@@ -89,20 +92,12 @@ public class ToDoService {
 
         ToDo(){}
 
-        ToDo(String product, LocalDate deadline, Integer quantity) {
+        ToDo(String product, int size, LocalDate deadline, Integer quantity) {
             this.deadline = deadline;
             this.product = product;
+            this.size = size;
             this.quantity = quantity.intValue();
         }
 
-        @Override
-        public String toString() {
-            final StringBuilder sb = new StringBuilder("ToDo{");
-            sb.append("product='").append(product).append('\'');
-            sb.append(", deadline=").append(deadline);
-            sb.append(", quantity=").append(quantity);
-            sb.append('}');
-            return sb.toString();
-        }
     }//:)
 }

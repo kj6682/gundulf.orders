@@ -13,14 +13,18 @@ public class ToDoKey implements Serializable {
     @JsonSerialize
     String product;
 
+    @JsonSerialize
+    Integer size;
+
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonDeserialize(using = LocalDateDeserializer.class)
     LocalDate deadline;
 
     public ToDoKey(){}
 
-    public ToDoKey(String product, LocalDate deadline){
+    public ToDoKey(String product, Integer size, LocalDate deadline){
         this.product = product;
+        this.size = size;
         this.deadline = deadline;
     }
 }

@@ -31,7 +31,7 @@ public class ToDoRepositoryTest {
 
     @Before
     public void setup() throws Exception{
-        toDo = new ToDo("product", LocalDate.of(2018,07,16), 1);
+        toDo = new ToDo("product", 1, LocalDate.of(2018,07,16), 1);
     }
 
     // write test cases here

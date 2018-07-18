@@ -16,6 +16,12 @@
       "category": "category",
       "quantity": 1,
       "size": 4
+    },
+    {
+      "name": "product",
+      "category": "category",
+      "quantity": 1,
+      "size": 8
     }
   ]
 }

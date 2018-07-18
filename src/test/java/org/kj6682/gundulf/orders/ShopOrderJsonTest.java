@@ -34,7 +34,7 @@ public class ShopOrderJsonTest {
     @MockBean
     private ShopOrderRepository shopOrderRepository;
 
-    Product cake1, cake4;
+    Product cake1, cake4, cake8;
 
     ShopOrder shopOrder;
 
@@ -47,9 +47,13 @@ public class ShopOrderJsonTest {
         cake4 = new Product("product",
                 "category",1,4);
 
+        cake8 = new Product("product",
+                "category",1,8);
+
         Set<Product> products = new HashSet<Product>();
         products.add(cake1);
         products.add(cake4);
+        products.add(cake8);
 
         shopOrder = new ShopOrder("customer",
                 "address",

@@ -44,7 +44,7 @@ public class ToDoJsonTest {
     @Before
     public void setup() throws Exception{
 
-        toDo = new ToDo("product", LocalDate.of(2018,07,16), 1);
+        toDo = new ToDo("product", 1, LocalDate.of(2018,07,16), 1);
 
         jsonFile = ResourceUtils.getFile("classpath:one_todo.json");
 
@@ -56,6 +56,7 @@ public class ToDoJsonTest {
         System.out.println(this.json.write(toDo));
         assertThat(this.json.write(toDo)).isEqualTo(jsonFile);
         assertThat(this.json.write(toDo)).hasJsonPathStringValue("@.product");
+        assertThat(this.json.write(toDo)).hasJsonPathNumberValue("@.size");
         assertThat(this.json.write(toDo)).hasJsonPathStringValue("@.deadline");
 
     }

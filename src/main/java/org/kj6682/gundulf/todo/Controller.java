@@ -44,7 +44,7 @@ public class Controller {
     @PostMapping(value = "/")
     ResponseEntity<?> create(@RequestBody ToDo todo) {
 
-        ToDo t = repository.findOne(new ToDoKey(todo.getProduct(), todo.getDeadline()));
+        ToDo t = repository.findOne(new ToDoKey(todo.getProduct(), todo.getSize(), todo.getDeadline()));
         if(t != null) {
             todo.setQuantity(t.getQuantity() + todo.getQuantity());
         }

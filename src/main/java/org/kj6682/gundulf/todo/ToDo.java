@@ -20,16 +20,21 @@ public class ToDo {
     String product;
 
     @Id
+    Integer size;
+
+    @Id
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonDeserialize(using = LocalDateDeserializer.class)
     LocalDate deadline;
 
     Integer quantity;
 
-    public ToDo(String product, LocalDate deadline, Integer quantity) {
+    public ToDo(String product, Integer size, LocalDate deadline, Integer quantity) {
+
         this.deadline = deadline;
+        this.size = size;
         this.product = product;
-        this.quantity = quantity.intValue();
+        this.quantity = quantity;
     }
 
     public ToDo() {

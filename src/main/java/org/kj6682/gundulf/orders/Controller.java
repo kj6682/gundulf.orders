@@ -42,7 +42,10 @@ class Controller {
         Assert.notNull(shopOrder, "ShopOrder can not be empty");
 
         shopOrder.getProducts().forEach(p ->
-                toDoService.create(p.getName(), shopOrder.getDeadline(), p.getQuantity() * p.getSize()));
+                toDoService.create(p.getName(),
+                        p.getSize(),
+                        shopOrder.getDeadline(),
+                        p.getQuantity() * p.getSize()));
         ;
 
         ShopOrder result = shopOrderRepository.save(shopOrder);
@@ -60,7 +63,10 @@ class Controller {
         Assert.notNull(shopOrder, "The ShopOrder you want to delete must not be null");
 
         shopOrder.getProducts().forEach(p ->
-                toDoService.create(p.getName(), shopOrder.getDeadline(), p.getQuantity() * p.getSize() * -1 ));
+                toDoService.create(p.getName(),
+                        p.getSize(),
+                        shopOrder.getDeadline(),
+                        p.getQuantity() * p.getSize() * -1 ));
         ;
 
         shopOrderRepository.delete(id);
