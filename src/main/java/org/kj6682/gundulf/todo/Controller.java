@@ -52,13 +52,26 @@ public class Controller {
 
     }
 
+    @GetMapping("/byProduct/{product}")
+    List<ToDo> getTodosByProduct(@PathVariable String product) {
+
+        List<ToDo> result = repository.findByProduct(product);
+
+        return result;
+
+    }
+
     @PostMapping(value = "/")
     ResponseEntity<?> create(@RequestBody ToDo todo) {
 
         ToDo t = repository.findOne(new ToDoKey(todo.getProduct(), todo.getSize(), todo.getDeadline()));
-        if(t != null) {
-            todo = new ToDo(todo.getProduct(), todo.getSize(), todo.getDeadline(), t.getQuantity() + todo.getQuantity());
+        if(t == null) {
+            return new ResponseEntity<ToDo>(todo, HttpStatus.NOT_FOUND);
         }
+        todo = new ToDo(todo.getProduct(),
+                todo.getSize(),
+                todo.getDeadline(),
+                t.getQuantity() + todo.getQuantity());
         ToDo result = repository.save(todo);
 
         return new ResponseEntity<ToDo>(result, HttpStatus.CREATED);

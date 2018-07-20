@@ -45,7 +45,7 @@ class Controller {
                 toDoService.create(p.getName(),
                         p.getSize(),
                         shopOrder.getDeadline(),
-                        p.getQuantity() * p.getSize()));
+                        p.getQuantity() ));
         ;
 
         ShopOrder result = shopOrderRepository.save(shopOrder);
@@ -66,7 +66,7 @@ class Controller {
                 toDoService.create(p.getName(),
                         p.getSize(),
                         shopOrder.getDeadline(),
-                        p.getQuantity() * p.getSize() * -1 ));
+                        p.getQuantity() * -1 ));
         ;
 
         shopOrderRepository.delete(id);

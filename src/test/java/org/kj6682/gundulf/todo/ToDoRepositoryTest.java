@@ -71,4 +71,19 @@ public class ToDoRepositoryTest {
         assertThat(numberOfToDosAfter == (numberOfToDosBefore + 1) );
     }
 
+    @Test
+    public void findByProduct(){
+        //give toDoToday
+
+        // when
+        toDoRepository.save(toDoToday);
+
+        // then
+        List<ToDo> sos = toDoRepository.findByProduct(toDoToday.getProduct());
+        assertThat(sos.size() != 0);
+        assertThat(sos.size() == 1);
+
+
+    }
+
 }
