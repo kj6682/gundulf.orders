@@ -3,7 +3,6 @@ package org.kj6682.gundulf.todo;
 import io.swagger.annotations.Api;
 import org.kj6682.gundulf.orders.ShopOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +15,6 @@ import java.util.List;
 
 import static org.springframework.util.Assert.isTrue;
 import static org.springframework.util.Assert.notNull;
-import static org.springframework.util.StringUtils.isEmpty;
 
 /**
  * Created by luigi on 02/12/2017.
@@ -62,21 +60,32 @@ public class Controller {
     }
 
     @PostMapping(value = "/")
-    ResponseEntity<?> create(@RequestBody ToDo todo) {
+    ResponseEntity<?> markTodo(@RequestBody ToDo data) {
 
-        ToDo t = repository.findOne(new ToDoKey(todo.getProduct(), todo.getSize(), todo.getDeadline()));
-        if(t == null) {
-            return new ResponseEntity<ToDo>(todo, HttpStatus.NOT_FOUND);
+        ToDo todo = repository.findByProductAndSizeAndDeadline(data.getProduct(),
+                                                            data.getSize(),
+                                                            data.getDeadline());
+        if(todo != null) {
+            return update(todo, data.getQuantity());
         }
-        todo = new ToDo(todo.getProduct(),
-                todo.getSize(),
-                todo.getDeadline(),
-                t.getQuantity() + todo.getQuantity());
+
+        return create(data);
+    }
+
+    private ResponseEntity<?> create(ToDo todo){
+        ToDo result = repository.save(todo);
+        return new ResponseEntity<ToDo>(result, HttpStatus.CREATED);
+    }
+
+    private ResponseEntity<?> update(ToDo todo, Integer quantity){
+        todo.setQuantity(todo.getQuantity() + quantity);
         ToDo result = repository.save(todo);
 
-        return new ResponseEntity<ToDo>(result, HttpStatus.CREATED);
+        return new ResponseEntity<ToDo>(result, HttpStatus.OK);
 
     }
+
+
 
 
     //@RequestMapping(value = "/producer/{producer}/orders.csv")

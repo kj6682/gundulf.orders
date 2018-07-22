@@ -31,7 +31,6 @@ class Controller {
     List<ShopOrder> getAllOrders() {
 
         List<ShopOrder> orders = shopOrderRepository.findAll();
-        toDoService.list();
 
         return orders;
 
@@ -42,7 +41,7 @@ class Controller {
         Assert.notNull(shopOrder, "ShopOrder can not be empty");
 
         shopOrder.getProducts().forEach(p ->
-                toDoService.create(p.getName(),
+                toDoService.markToDo(p.getName(),
                         p.getSize(),
                         shopOrder.getDeadline(),
                         p.getQuantity() ));
@@ -56,14 +55,13 @@ class Controller {
 
     @DeleteMapping(value = "/{id}")
     void deleteOrder(@PathVariable(required = true) Long id) {
-        System.out.println("bloody delete " + id);
         Assert.notNull(id, "ShopOrder id can not be null");
 
         ShopOrder shopOrder = shopOrderRepository.findOne(id);
         Assert.notNull(shopOrder, "The ShopOrder you want to delete must not be null");
 
         shopOrder.getProducts().forEach(p ->
-                toDoService.create(p.getName(),
+                toDoService.markToDo(p.getName(),
                         p.getSize(),
                         shopOrder.getDeadline(),
                         p.getQuantity() * -1 ));

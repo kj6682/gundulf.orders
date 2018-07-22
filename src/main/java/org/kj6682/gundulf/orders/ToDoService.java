@@ -46,16 +46,7 @@ public class ToDoService {
     }
 
 
-    ResponseEntity<String> list() {
-        String endpoint = todos + "/";
-        ResponseEntity<String> response = restTemplate.getForEntity(endpoint, String.class);
-        Assert.isTrue(HttpStatus.OK.equals(response.getStatusCode()),
-                "something got wrong with " + endpoint);
-        return response;
-    }
-
-
-    ResponseEntity<ToDo> create(String product,
+    ResponseEntity<ToDo> markToDo(String product,
                                 Integer size,
                     LocalDate deadline,
                     Integer quantity) {
@@ -65,7 +56,8 @@ public class ToDoService {
         ResponseEntity<ToDo> response = restTemplate
                 .exchange(todos + "/", HttpMethod.POST, request, ToDo.class);
 
-        Assert.isTrue(response.getStatusCode().equals(HttpStatus.CREATED), "HttpStatus must be CREATED");
+        Assert.isTrue(response.getStatusCode().equals(HttpStatus.CREATED)
+                || response.getStatusCode().equals(HttpStatus.OK), "HttpStatus must be CREATED or OK");
 
         ToDo todo = response.getBody();
 
@@ -76,6 +68,7 @@ public class ToDoService {
         return response;
 
     }
+
 
     @Data
     static class ToDo {

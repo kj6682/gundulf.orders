@@ -6,23 +6,24 @@ import lombok.Data;
 import org.kj6682.commons.LocalDateDeserializer;
 import org.kj6682.commons.LocalDateSerializer;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
+import javax.persistence.*;
 import java.time.LocalDate;
 
 @Data
 @Entity
-@IdClass(ToDoKey.class)
+@Table(uniqueConstraints={
+        @UniqueConstraint(columnNames = {"product", "size", "quantity"})
+})
 public class ToDo {
 
     @Id
+    @GeneratedValue
+    Long id;
+
     String product;
 
-    @Id
     Integer size;
 
-    @Id
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonDeserialize(using = LocalDateDeserializer.class)
     LocalDate deadline;
