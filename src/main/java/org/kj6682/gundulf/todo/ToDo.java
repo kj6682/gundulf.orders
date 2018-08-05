@@ -66,7 +66,7 @@ public class ToDo {
         }else{
             addDetail(new Detail(shop, quantity));
         }
-        
+
         this.quantity = this.quantity + quantity;
     }
 }//:)
