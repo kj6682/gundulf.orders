@@ -3,8 +3,6 @@ package org.kj6682.gundulf.todo;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.kj6682.gundulf.orders.Product;
-import org.kj6682.gundulf.orders.ShopOrder;
 import org.kj6682.gundulf.orders.ShopOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
@@ -16,8 +14,6 @@ import org.springframework.util.ResourceUtils;
 import java.io.File;
 import java.nio.file.Files;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -29,50 +25,39 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @RunWith(SpringRunner.class)
 @JsonTest
-public class ToDoJsonTest {
+public class DetailJsonTest {
 
     @Autowired
-    private JacksonTester<ToDo> json;
+    private JacksonTester<Detail> json;
 
-    @MockBean
-    private ShopOrderRepository shopOrderRepository;
 
-    ToDo toDo;
+    Detail detail;
 
     File jsonFile;
 
     @Before
     public void setup() throws Exception{
 
-        toDo = new ToDo("product", 1, LocalDate.of(2018,07,16), 10);
-
-        Detail d1 = new Detail("shop1", 8);
-        Detail d2 = new Detail("shop2", 2);
-
-        toDo.addDetail(d1);
-        toDo.addDetail(d2);
-
-        jsonFile = ResourceUtils.getFile("classpath:one_todo.json");
+        detail = new Detail("shop", 1);
+        jsonFile = ResourceUtils.getFile("classpath:one_todo_detail.json");
 
     }
 
     @Test
     public void serialise() throws Exception{
 
-        System.out.println(this.json.write(toDo));
-        assertThat(this.json.write(toDo)).isEqualTo(jsonFile);
-        assertThat(this.json.write(toDo)).hasJsonPathStringValue("@.product");
-        assertThat(this.json.write(toDo)).hasJsonPathNumberValue("@.size");
-        assertThat(this.json.write(toDo)).hasJsonPathStringValue("@.deadline");
-        assertThat(this.json.write(toDo)).hasJsonPathArrayValue("@.details");
+        System.out.println(this.json.write(detail));
+        assertThat(this.json.write(detail)).isEqualTo(jsonFile);
+        assertThat(this.json.write(detail)).hasJsonPathStringValue("@.shop");
+        assertThat(this.json.write(detail)).hasJsonPathNumberValue("@.quantity");
 
     }
     @Test
     public void deserialise() throws Exception {
 
         String jsonObject = new String(Files.readAllBytes(jsonFile.toPath()));
-        ToDo newToDo = this.json.parse(jsonObject).getObject();
-        assertThat(newToDo.equals(toDo));
+        Detail newToDo = this.json.parse(jsonObject).getObject();
+        assertThat(newToDo.equals(detail));
 
     }
 

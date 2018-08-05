@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.springframework.util.Assert.isTrue;
 import static org.springframework.util.Assert.notNull;
@@ -60,25 +62,33 @@ public class Controller {
     }
 
     @PostMapping(value = "/")
-    ResponseEntity<?> markTodo(@RequestBody ToDo data) {
+    ResponseEntity<?> markTodo(
+            @RequestParam(value = "shop", defaultValue = "online", required = false) String shop,
+            @RequestBody ToDo data) {
 
         ToDo todo = repository.findByProductAndSizeAndDeadline(data.getProduct(),
                                                             data.getSize(),
                                                             data.getDeadline());
         if(todo != null) {
-            return update(todo, data.getQuantity());
+            return update(todo, data.getQuantity(), shop);
         }
 
-        return create(data);
+        return create(data, shop);
     }
 
-    private ResponseEntity<?> create(ToDo todo){
-        ToDo result = repository.save(todo);
-        return new ResponseEntity<ToDo>(result, HttpStatus.CREATED);
+    private ResponseEntity<?> create(ToDo todo, String shop){
+
+        todo.addDetail(new Detail(shop, todo.getQuantity()));
+
+        ToDo newTodo = repository.save(todo);
+
+        return new ResponseEntity<ToDo>(newTodo, HttpStatus.CREATED);
     }
 
-    private ResponseEntity<?> update(ToDo todo, Integer quantity){
-        todo.setQuantity(todo.getQuantity() + quantity);
+    private ResponseEntity<?> update(ToDo todo, Integer quantity, String shop){
+
+        todo.update(shop, quantity);
+
         ToDo result = repository.save(todo);
 
         return new ResponseEntity<ToDo>(result, HttpStatus.OK);

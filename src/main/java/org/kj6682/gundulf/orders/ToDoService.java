@@ -46,15 +46,40 @@ public class ToDoService {
     }
 
 
-    ResponseEntity<ToDo> markToDo(String product,
-                                Integer size,
-                    LocalDate deadline,
-                    Integer quantity) {
+    ResponseEntity<ToDo> post(String product,
+                                  Integer size,
+                                  LocalDate deadline,
+                                  Integer quantity,
+                                  String shop) {
 
         HttpEntity<ToDo> request = new HttpEntity<>(new ToDo(product, size, deadline, quantity));
 
         ResponseEntity<ToDo> response = restTemplate
-                .exchange(todos + "/", HttpMethod.POST, request, ToDo.class);
+                .exchange(todos + "/?shop="+shop, HttpMethod.POST, request, ToDo.class);
+
+        Assert.isTrue(response.getStatusCode().equals(HttpStatus.CREATED)
+                || response.getStatusCode().equals(HttpStatus.OK), "HttpStatus must be CREATED or OK");
+
+        ToDo todo = response.getBody();
+
+        Assert.notNull(todo, "todo is not null");
+        Assert.isTrue(todo.getProduct().equals(product), "the returned product must be the same");
+        Assert.isTrue(todo.getDeadline().isEqual(deadline), "the returned deadline must be the same");
+
+        return response;
+
+    }
+
+    ResponseEntity<ToDo> markToDo(String product,
+                                  Integer size,
+                                  LocalDate deadline,
+                                  Integer quantity,
+                                  String shop) {
+
+        HttpEntity<ToDo> request = new HttpEntity<>(new ToDo(product, size, deadline, quantity));
+
+        ResponseEntity<ToDo> response = restTemplate
+                .exchange(todos + "/?shop="+shop, HttpMethod.POST, request, ToDo.class);
 
         Assert.isTrue(response.getStatusCode().equals(HttpStatus.CREATED)
                 || response.getStatusCode().equals(HttpStatus.OK), "HttpStatus must be CREATED or OK");

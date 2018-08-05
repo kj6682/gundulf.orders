@@ -2,5 +2,15 @@
   "product": "product",
   "size": 1,
   "deadline": "2018-07-16",
-  "quantity":1
+  "quantity":10,
+  "details": [
+    {
+      "shop":"shop1",
+      "quantity":8
+    },
+    {
+      "shop":"shop2",
+      "quantity":2
+    }
+  ]
 }
